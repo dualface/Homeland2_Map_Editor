@@ -100,13 +100,6 @@ function FireBehavior:bind(object)
     end
     object:bindMethod(self, "tick", tick)
 
-    local function runtimeStateDump(object, state)
-        state.fireEnabled_ = object.fireEnabled_
-        state.fireCooldown_ = object.fireCooldown_
-        return state
-    end
-    object:bindMethod(self, "runtimeStateDump", runtimeStateDump)
-
     self:reset(object)
 end
 
@@ -132,7 +125,6 @@ function FireBehavior:unbind(object)
     object:unbindMethod(self, "setFireEnabled")
     object:unbindMethod(self, "fire")
     object:unbindMethod(self, "tick")
-    object:unbindMethod(self, "runtimeStateDump")
 end
 
 function FireBehavior:reset(object)

@@ -131,7 +131,7 @@ function EditorScene:playMap()
     self.mapRuntimeC = MapRuntimeC:create()
     self:addChild(self.mapRuntimeC)
 
-    self.mapRuntime = MapRuntime.new(map, mapRuntimeC)
+    self.mapRuntime = MapRuntime.new(self.map, self.mapRuntimeC)
     self.mapRuntime:preparePlay()
     self.mapRuntime:startPlay()
 end

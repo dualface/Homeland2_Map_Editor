@@ -47,10 +47,4 @@ function Range:vardump()
     return state
 end
 
-function Range:runtimeStateDump()
-    local state = Range.super.runtimeStateDump(self)
-    state.collisionEnabled = self.collisionEnabled_
-    return state
-end
-
 return Range

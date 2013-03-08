@@ -30,7 +30,6 @@ function ObjectBase:ctor(id, state, map)
     self.state_      = state
     self.valid_      = false
     self.play_       = false
-    self.player_     = false
     self.tag_        = 0
     self.sprite_     = nil
     if type(self.viewZOrdered_) ~= "boolean" then
@@ -71,10 +70,6 @@ end
 
 function ObjectBase:isValid()
     return self.valid_
-end
-
-function ObjectBase:isPlayer()
-    return self.player_
 end
 
 function ObjectBase:getTag()
@@ -305,20 +300,6 @@ function ObjectBase:vardump()
     end
 
     return state
-end
-
-function ObjectBase:runtimeStateDump()
-    local state = {
-        x_ = self.x_,
-        y_ = self.y_,
-    }
-    return state
-end
-
-function ObjectBase:setRuntimeState(state)
-    for k, v in pairs(state) do
-        self[k] = v
-    end
 end
 
 function ObjectBase:dump(label)

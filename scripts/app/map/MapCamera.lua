@@ -22,32 +22,6 @@ function MapCamera:ctor(map)
 
     if minScaleH > minScale then minScale = minScaleH end
     self.minScale_ = minScale
-
-    self.cameraTracking_  = false
-    self.trackingDelay_   = 0
-    self.trackingSpeed_   = MapConstants.NORMAL_TRACKING_SPEED
-    self.trackingX_       = 0
-    self.trackingY_       = 0
-    self.trackingTarget_  = MapConstants.TRACKING_PLAYER
-end
-
-function MapCamera:cameraTracking(left, bottom)
-    local radians = math2d.radians4point(self.offsetX_, self.offsetY_, left, bottom)
-    local dist = math2d.dist(self.offsetX_, self.offsetY_, left, bottom)
-    if dist < MapConstants.SET_FAST_TRACKING_DIST and self.trackingSpeed_ > MapConstants.NORMAL_TRACKING_SPEED then
-        self.trackingSpeed_ = self.trackingSpeed_ - 1
-    elseif dist > 10 and self.trackingSpeed_ < MapConstants.NORMAL_TRACKING_SPEED then
-        self.trackingSpeed_ = self.trackingSpeed_ + 1
-    elseif dist < 10 then
-        self.trackingSpeed_ = self.trackingSpeed_ * (dist / 10)
-    end
-    local ox, oy = math2d.pointAtCircle(0, 0, radians, self.trackingSpeed_)
-    self:moveOffset(ox, oy)
-end
-
-function MapCamera:disableCameraTracking()
-    self.trackingDelay_ = 1.5
-    self.trackingSpeed_ = MapConstants.FAST_TRACKING_SPEED
 end
 
 --[[--
@@ -108,6 +82,11 @@ function MapCamera:setScale(scale)
     if debugLayer then debugLayer:setScale(scale) end
 end
 
+--[[--
+
+动态调整摄像机的缩放比例
+
+]]
 function MapCamera:zoomTo(scale, x, y)
     self.zooming_ = true
     self.scale_ = scale
@@ -239,23 +218,6 @@ function MapCamera:setOffset(x, y, movingSpeed, onComplete)
     end
 end
 
-function MapCamera:setOffsetForPlayer()
-    if self.zooming_ then return end
-
-    -- 查找玩家对象，然后定位摄像机
-    local player
-    for id, object in pairs(self.map_:getObjectsByClassId("static")) do
-        if object:hasBehavior("PlayerBehavior") then
-            player = object
-            self:setOffset(self:convertToCameraPosition(object.x_, object.y_))
-            return
-        end
-    end
-
-    -- 如果没有找到玩家，则定位于左下角
-    self:setOffset(0, 0)
-end
-
 --[[--
 
 移动指定的偏移量
@@ -316,20 +278,6 @@ function MapCamera:convertToCameraPosition(x, y)
     local left = -(x - (display.width - self.margin_.left - self.margin_.right) / 2)
     local bottom = -(y - (display.height - self.margin_.top - self.margin_.bottom) / 2)
     return left, bottom
-end
-
-function MapCamera:runtimeStateDump()
-    local state = {
-        scale       = self.scale_,
-        offsetX     = self.offsetX_,
-        offsetY     = self.offsetY_,
-    }
-    return state
-end
-
-function MapCamera:setRuntimeState(state)
-    self:setScale(state.scale)
-    self:setOffset(state.offsetX, state.offsetY)
 end
 
 return MapCamera

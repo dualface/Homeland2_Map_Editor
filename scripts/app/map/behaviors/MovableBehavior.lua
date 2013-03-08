@@ -1,6 +1,5 @@
 
 local MapConstants = require("app.map.MapConstants")
-local PathRunner   = require("app.map.PathRunner")
 local math2d       = require("math2d")
 
 local BehaviorBase = require("app.map.behaviors.BehaviorBase")
@@ -306,23 +305,6 @@ function MovableBehavior:bind(object)
     end
     object:bindMethod(self, "vardump", vardump)
 
-    local function runtimeStateDump(object, state)
-        state.currentSpeed_      = object.currentSpeed_
-        state.movingState_       = object.movingState_
-        state.nextPathId_        = object.nextPathId_
-        state.nextPointIndex_    = object.nextPointIndex_
-        state.nextMovingForward_ = object.nextMovingForward_
-        state.nextX_             = object.nextX_
-        state.nextY_             = object.nextY_
-        state.nextRadians_       = object.nextRadians_
-        state.nextDist_          = object.nextDist_
-        state.currentDist_       = object.currentDist_
-        state.currentPathId_     = object.currentPathId_
-        state.currentPointIndex_ = object.currentPointIndex_
-        return state
-    end
-    object:bindMethod(self, "runtimeStateDump", runtimeStateDump)
-
     self:reset(object)
 end
 
@@ -351,7 +333,6 @@ function MovableBehavior:unbind(object)
     object:unbindMethod(self, "getFuturePosition")
     object:unbindMethod(self, "setSpeed")
     object:unbindMethod(self, "vardump")
-    object:unbindMethod(self, "runtimeStateDump")
 end
 
 function MovableBehavior:reset(object)

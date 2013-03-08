@@ -110,21 +110,6 @@ function DestroyedBehavior:bind(object)
     end
     object:bindMethod(self, "fastUpdateView", fastUpdateView)
 
-    local function runtimeStateDump(object, state)
-        state.destroyed_ = object.destroyed_
-        state.maxHp_     = object.maxHp_
-        state.hp_        = object.hp_
-        return state
-    end
-    object:bindMethod(self, "runtimeStateDump", runtimeStateDump)
-
-    local function setRuntimeState(object, state)
-        if object.destroyed_ and object.showDestroyedStatus then
-            object:showDestroyedStatus("skip anim")
-        end
-    end
-    object:bindMethod(self, "setRuntimeState", setRuntimeState)
-
     self:reset(object)
 end
 
@@ -147,8 +132,6 @@ function DestroyedBehavior:unbind(object)
     object:unbindMethod(self, "removeView")
     object:unbindMethod(self, "updateView")
     object:unbindMethod(self, "fastUpdateView")
-    object:unbindMethod(self, "runtimeStateDump")
-    object:unbindMethod(self, "setRuntimeState")
 end
 
 function DestroyedBehavior:reset(object)

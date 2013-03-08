@@ -12,12 +12,9 @@ MapConstants.FIRE_RANGE_ZORDER      = 150
 MapConstants.DEFAULT_OBJECT_ZORDER  = 100
 MapConstants.MAX_OBJECT_ZORDER      = 20000
 MapConstants.BULLET_ZORDER          = 21000
-MapConstants.ICE_RING_ZORDER        = 20010
-MapConstants.EVENT_SKIP             = 6
 MapConstants.NORMAL_TRACKING_SPEED  = 3
 MapConstants.FAST_TRACKING_SPEED    = 12
 MapConstants.SET_FAST_TRACKING_DIST = display.height / 3
-MapConstants.TRACKING_PLAYER        = "player"
 
 MapConstants.CROSS_POINT_TAP_RADIUS = 50
 MapConstants.HP_BAR_ZORDER          = 30000
@@ -30,14 +27,5 @@ MapConstants.LEVEL_LABEL_FONT_SIZE  = 16
 
 MapConstants.PLAYER_CAMP            = 1
 MapConstants.ENEMY_CAMP             = 2
-
-MapConstants.RESUME_FROM_PK_DELAY   = 0.3
-MapConstants.SHIP_DESTROY_ANIM_TIME = 1.2
-MapConstants.GODSKILL_COMMON_CD_TIME = 1.5
-
-MapConstants.REPAIR_TOWER_BTN_ZORDER      = 99999
-MapConstants.REPAIR_TOWER_BTN_RADIUS      = 50
-MapConstants.REPAIR_TOWER_BTN_OFFSET_Y    = 94
-MapConstants.REPAIR_TOWER_BTN_COORD_COUNT = 860            --确定修复按钮上下的坐标值
 
 return MapConstants

@@ -251,16 +251,6 @@ end
 function Map:getNextPointIndexOnPath(pathId, pointIndex, movingForward, reverseAtEnd)
     local path = self:getObject(pathId)
 
-    local crossPoint = self.crossPointsOnPath_[pathId][pointIndex]
-    if crossPoint and crossPoint:isMovingForward() == movingForward then
-        -- 如果对象正在岔道起点上，并且行进方向与岔道方向一致，则切换到岔道的目的地
-        local dest = crossPoint:getDestByIndex(crossPoint:getSelectedIndex())
-        path          = self:getObject(dest:getPathId())
-        pointIndex    = dest:getPointIndex1()
-        movingForward = dest:isMovingForward()
-        return path, pointIndex, movingForward
-    end
-
     if movingForward then
         pointIndex = pointIndex + 1
         local count = path:getPointsCount()
@@ -296,7 +286,9 @@ function Map:createView(parent)
     CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGB565)
     self.bgSprite_ = display.newSprite(self.imageName_)
     CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888)
+
     self.bgSprite_:registerScriptHandler(function(event)
+        -- 地图对象删除时，自动从缓存里卸载地图材质
         if event == "exit" then
             display.removeSpriteFrameByImageName(self.imageName_)
         end
@@ -326,7 +318,7 @@ end
 
 --[[--
 
-删除 sprite
+删除视图
 
 ]]
 function Map:removeView()
