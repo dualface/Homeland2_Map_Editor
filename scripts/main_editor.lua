@@ -7,6 +7,8 @@ function __G__TRACKBACK__(errorMessage)
     CCLuaLog("----------------------------------------")
 end
 
+CCLuaLoadChunksFromZip("res/framework_precompiled.zip")
+
 xpcall(function()
     require("config")
     require("framework.init")
