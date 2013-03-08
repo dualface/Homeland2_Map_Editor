@@ -1,10 +1,11 @@
 .*
 *.lnk
+*.suo
 /assets/workdir_/
 /tmp/
 *.xcuserdatad/
 *.xcworkspace
-proj.win32/Debug/
-proj.win32/*.sdf
-proj.win32/*.user
-
+proj.win32/Homeland2/Debug/
+proj.win32/Homeland2/*.sdf
+proj.win32/Homeland2/*.user
+proj.win32/Homeland2/*.aps
