@@ -103,14 +103,27 @@ function EditorScene:ctor()
     self.playToolbar:setVisible(false)
     self:addChild(self.playToolbar)
 
-    self:editMap()
+    if device.platform == "ios" or device.platform == "android" then
+        -- 如果是在真机上运行，就直接开始播放地图，不再使用编辑器
+        self:playMap()
+    else
+        self:editMap()
+    end
 end
 
 -- 开始运行地图
 function EditorScene:playMap()
+    CCDirector:sharedDirector():setDisplayStats(true)
+
     -- 隐藏编辑器界面
     self.toolbar:getView():setVisible(false)
-    self.playToolbar:setVisible(true)
+
+    if device.platform == "ios" or device.platform == "android" then
+        -- 真机上禁止编辑器工具栏
+        self.playToolbar:setVisible(false)
+    else
+        self.playToolbar:setVisible(true)
+    end
     self.mapNameLabel:setVisible(false)
 
     self.map:getBackgroundLayer():setVisible(true)
@@ -133,6 +146,8 @@ end
 
 -- 开始编辑地图
 function EditorScene:editMap()
+    CCDirector:sharedDirector():setDisplayStats(false)
+
     if self.mapRuntime then
         self.mapRuntime:stopPlay()
         self.mapRuntime = nil
