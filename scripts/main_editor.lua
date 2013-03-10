@@ -7,6 +7,18 @@ function __G__TRACKBACK__(errorMessage)
     CCLuaLog("----------------------------------------")
 end
 
+if jit then
+    jit.on()
+    local status = jit.status()
+    if status then
+        status = "ON"
+    else
+        status = "OFF"
+    end
+    CCLuaLog("LuaJIT status is " .. status)
+end
+
+
 CCFileUtils:sharedFileUtils():addSearchPath("res/")
 CCLuaLoadChunksFromZip("res/framework_precompiled.zip")
 

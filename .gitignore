@@ -13,4 +13,6 @@ proj.win32/Homeland2/*.suo
 proj.android/assets/*
 proj.android/obj/*
 proj.android/libs/*
+proj.android/bin/*
+proj.android/gen/*
 
