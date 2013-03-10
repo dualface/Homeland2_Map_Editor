@@ -60,7 +60,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     luaopen_MapRuntimeC_luabinding(L);
     
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/main.lua");
+    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/main_editor.lua");
 #else
     string path = CCFileUtils::sharedFileUtils()->fullPathForFilename(getStartupScriptFilename().c_str());
 #endif
