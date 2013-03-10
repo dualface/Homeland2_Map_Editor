@@ -177,4 +177,21 @@ function Toolbar:getSelectedButtonName()
     return self.tools_[self.currentToolName_].buttons[self.currentButtonIndex_].name
 end
 
+function Toolbar:showNotice(text, fontsize, delay)
+    local label = ui.newTTFLabel({
+        text = "Save map ok",
+        size = fontsize or 96,
+        color = ccc3(100, 255, 100),
+        align = ui.TEXT_ALIGN_CENTER,
+    })
+
+    label:setPosition(display.cx, display.cy)
+    self:getView():addChild(label)
+
+    transition.moveBy(label, {y = 20, time = 1.0, delay = delay or 0.5})
+    transition.fadeOut(label, {time = 1.0, delay = delay or 0.5, onComplete = function()
+        label:removeSelf()
+    end})
+end
+
 return Toolbar

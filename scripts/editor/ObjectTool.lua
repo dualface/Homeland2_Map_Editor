@@ -55,7 +55,7 @@ function ObjectTool:selected(selectedButtonName)
 
     if selectedButtonName == "BindObjectToPath" then
         self.currentObject_:updateView()
-        self:createObjectBindingLabel("#BindObjectToPathLabel.png", "static")
+        self:createObjectBindingLabel("选择要绑定的路径点", "static")
     else
         self:removeObjectBindingLabel()
         if selectedButtonName == "CreateObject" or selectedButtonName == "RemoveObject" then
@@ -104,12 +104,20 @@ function ObjectTool:setCurrentObject(object)
     end
 end
 
-function ObjectTool:createObjectBindingLabel(imageName, isStaticLabel)
+function ObjectTool:createObjectBindingLabel(text, isStaticLabel)
     self:removeObjectBindingLabel()
 
     local x, y = self.currentObject_:getPosition()
-    local label = display.newSprite(imageName)
-    label:setPosition(x + 60, y + 46)
+    local label = ui.newTTFLabelWithOutline({
+        text         = text,
+        size         = 20,
+        align        = ui.TEXT_ALIGN_CENTER,
+        color        = ccc3(255, 100, 100),
+        colorOutline = ccc3(255, 255, 255),
+        x            = labelX,
+        y            = labelY,
+    })
+    label:setPosition(x, y + 100)
     self.map_:getDebugLayer():addChild(label, EditorConstants.BINDING_LABEL_ZORDER)
 
     if not isStaticLabel then
@@ -198,7 +206,7 @@ function ObjectTool:onTouchSelectObject(event, x, y)
         self.toolbar_:dispatchEvent({name = "UPDATE_OBJECT", object = self.currentObject_})
 
         if self.currentObjectBindingPathId_ and not self.currentObject_:isBinding() then
-            self:createObjectBindingLabel("#BindObjectToPathOffLabel.png")
+            self:createObjectBindingLabel("对象已经解除绑定")
         end
         self.currentObjectBindingPathId_ = nil
 
@@ -229,7 +237,7 @@ function ObjectTool:onTouchBindObjectToPath(event, x, y)
                 self:setCurrentObject(self.currentObject_)
 
                 self.toolbar_:selectButton("ObjectTool", 2)
-                self:createObjectBindingLabel("#BindObjectToPathOnLabel.png")
+                self:createObjectBindingLabel("对象已经绑定到路径")
                 return false
             end
         end

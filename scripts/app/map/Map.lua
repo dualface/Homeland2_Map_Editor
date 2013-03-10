@@ -26,8 +26,8 @@ function Map:ctor(id, debug)
     self.id_               = id
     self.debug_            = debug
     self.ready_            = false
-    self.mapModuleName_    = format("data.maps.Map%sData", id)
-    self.eventModuleName_  = format("data.maps.Map%sEvents", id)
+    self.mapModuleName_    = format("maps.Map%sData", id)
+    self.eventModuleName_  = format("maps.Map%sEvents", id)
 
     local ok, data = pcall(function() return require(self.mapModuleName_) end)
     if not ok or type(data) ~= "table" then

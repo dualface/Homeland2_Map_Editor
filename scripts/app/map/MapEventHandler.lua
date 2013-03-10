@@ -90,10 +90,6 @@ function MapEventHandler:hit(object, target, bullet, time)
     if target:isDestroyed() or self.runtime_.over_ then return end
 
     local damage = bullet.damage_
-    if math.random() % 2 == 0 then
-        -- 随机显示 crit 图标（暴击）
-        self:newHitLabel(bullet, "#HitCrit.png", damage)
-    end
     local target = bullet.target_
 
     -- 扣除目标 HP
@@ -106,6 +102,10 @@ function MapEventHandler:hit(object, target, bullet, time)
         target:updateView()
         self:objectDestroyed(target)
     end
+end
+
+-- 没有命中目标
+function MapEventHandler:miss(object, target, bullet)
 end
 
 -- 对象被摧毁
@@ -141,24 +141,6 @@ function MapEventHandler:showShipExplode(object)
     local decoration = runtime:newDecoration("ShipExplode", object)
     decoration:setDelay(decoration.delay_)
     decoration:playAnimationOnceAndRemove()
-end
-
-function MapEventHandler:newHitLabel(bullet, imageName)
-    local bulletView = bullet:getView()
-    local hitLabel = display.newSprite(imageName)
-    local x, y = bulletView:getPosition()
-    hitLabel:setRotation(math.random(-15, 15))
-    hitLabel:setPosition(x, y + 10)
-    self.map_:getBatchLayer():addChild(hitLabel, MapConstants.BULLET_ZORDER + 1)
-
-    hitLabel:setScale(0.01)
-    transition.moveBy(hitLabel, {y = 20, time = 0.8})
-    transition.scaleTo(hitLabel, {scale = 1.0, time = 0.4, easing = "ELASTICOUT"})
-    transition.fadeOut(hitLabel, {delay = 0.4, time = 0.3, onComplete = function()
-        if not tolua.isnull(hitLabel) then
-            hitLabel:removeSelf()
-        end
-    end})
 end
 
 return MapEventHandler

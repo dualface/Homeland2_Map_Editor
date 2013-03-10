@@ -44,18 +44,33 @@ defines["Building01"] = object
 
 local object = {
     classId     = "static",
-    imageName   = {"#EnemyTower0101.png", "#EnemyTower0102.png"},
+    imageName   = {"#PlayerTower0101.png", "#PlayerTower0102.png"},
     radius      = 32,
     offsetX     = {-15, -16, -16},
     offsetY     = {3, 3, 2},
-    towerId     = "Tower01L01",
-    decorations = {"EnemyTower01Destroyed"},
+    towerId     = "PlayerTower01L01",
+    decorations = {"PlayerTower01Destroyed"},
     behaviors   = {"TowerBehavior"},
     fireOffsetX = {0, 0, 0},
     fireOffsetY = {24, 24, 24},
-    campId      = MapConstants.ENEMY_CAMP,
+    campId      = MapConstants.PLAYER_CAMP,
 }
-defines["EnemyTower01"] = object
+defines["PlayerTower01"] = object
+
+local object = {
+    classId     = "static",
+    imageName   = {"#PlayerTower0201.png", "#PlayerTower0202.png"},
+    radius      = 32,
+    offsetX     = {-15, -16, -16},
+    offsetY     = {3, 3, 2},
+    towerId     = "PlayerTower02L01",
+    decorations = {"PlayerTower02Destroyed"},
+    behaviors   = {"TowerBehavior"},
+    fireOffsetX = {0, 0, 0},
+    fireOffsetY = {24, 24, 24},
+    campId      = MapConstants.PLAYER_CAMP,
+}
+defines["PlayerTower02"] = object
 
 ----------------------------------------
 

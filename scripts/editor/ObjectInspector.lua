@@ -220,27 +220,6 @@ function ObjectInspector:setObject(object)
     lines[#lines + 1] = {
         name  = "radius",
         value = format("%0.2f", object:getRadius()),
-        -- edit  = true,
-        -- editNote = "radius is integer",
-        -- editFunction = function(object, newvalue)
-        --     object.radius_ = toint(newvalue)
-        -- end
-    }
-
-    lines[#lines + 1] = {
-        name  = "initVisible",
-        value = format("%s", tostring(object:isInitVisible())),
-        edit  = true,
-        editNote = "\"true, yes, 1\" = true, others = false",
-        editFunction = function(object, newvalue)
-            newvalue = string.lower(tostring(newvalue))
-            if newvalue == "1" or newvalue == "true" or newvalue == "yes" then
-                newvalue = true
-            else
-                newvalue = false
-            end
-            object:setInitVisible(newvalue)
-        end
     }
 
     lines[#lines + 1] = {
@@ -301,18 +280,6 @@ function ObjectInspector:setObject(object)
         }
     end
 
-    if object:hasBehavior("PlayerBehavior") then
-        lines[#lines + 1] = {
-            name  = "playerTestId",
-            value = object:getPlayerTestId(),
-            edit  = true,
-            editNote = "playerTestId is string",
-            editFunction = function(object, newvalue)
-                object:setPlayerTestId(newvalue)
-            end
-        }
-    end
-
     if object:hasBehavior("BuildingBehavior") then
         lines[#lines + 1] = {
             name  = "buildingId",
@@ -329,11 +296,6 @@ function ObjectInspector:setObject(object)
         lines[#lines + 1] = {
             name  = "fireRange",
             value = object:getFireRange(),
-            -- edit  = true,
-            -- editNote = "fireRange is integer",
-            -- editFunction = function(object, newvalue)
-            --     object.fireRange_ = toint(newvalue)
-            -- end
         }
     end
 
@@ -390,33 +352,6 @@ function ObjectInspector:setObject(object)
         lines[#lines + 1] = {
             name  = "maxHp",
             value = object:getMaxHp(),
-            -- edit  = true,
-            -- editNote = "maxHp is integer",
-            -- editFunction = function(object, newvalue)
-            --     object.maxHp_ = toint(newvalue)
-            -- end
-        }
-    end
-
-    if object:hasBehavior("UpgradableBehavior") then
-        lines[#lines + 1] = {
-            name  = "maxLevel",
-            value = object:getMaxLevel(),
-        }
-        lines[#lines + 1] = {
-            name  = "level",
-            value = object:getLevel(),
-            edit  = true,
-            editNote = format("level is integer, max = %s", tostring(object:getMaxLevel())),
-            editFunction = function(object, newvalue)
-                newvalue = toint(newvalue)
-                if newvalue < 1 then
-                    newvalue = 1
-                elseif newvalue > object:getMaxLevel() then
-                    newvalue = object:getMaxLevel()
-                end
-                object:setLevel(newvalue)
-            end
         }
     end
 
@@ -496,7 +431,7 @@ function ObjectInspector:setObject(object)
 
         local text = ui.newTTFLabel({
             text = string.upper(string.sub(behavior, 1, -9)),
-            size = 11,
+            size = 10,
             align = ui.TEXT_ALIGN_LEFT,
             x = 20,
             y = 16,

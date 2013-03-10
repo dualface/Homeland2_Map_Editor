@@ -1,19 +1,13 @@
 
 local LEVEL_ID = "A0001"
 
-local MapConstants       = require("app.map.MapConstants")
-local Map                = require("app.map.Map")
-local MapRuntime         = require("app.map.MapRuntime")
-local MapEvent           = require("app.map.MapEvent")
-local EditorConstants    = require("editor.EditorConstants")
-local Toolbar            = require("editor.Toolbar")
-local GeneralTool        = require("editor.GeneralTool")
-local PathTool           = require("editor.PathTool")
-local RangeTool          = require("editor.RangeTool")
-local ObjectTool         = require("editor.ObjectTool")
-local ObjectInspector    = require("editor.ObjectInspector")
-local PathInspector      = require("editor.PathInspector")
+local EditorConstants = require("editor.EditorConstants")
 
+--[[--
+
+编辑器场景
+
+]]
 local EditorScene = class("EditorScene", function()
     return display.newScene("EditorScene")
 end)
@@ -37,16 +31,16 @@ function EditorScene:ctor()
     self:addChild(self.uiLayer)
 
     -- 创建地图对象
-    self.map = Map.new(LEVEL_ID, true) -- 地图ID, 是否是编辑器模式
+    self.map = require("app.map.Map").new(LEVEL_ID, true) -- 参数：地图ID, 是否是编辑器模式
     self.map:init()
     self.map:createView(self.mapLayer)
 
     -- 创建工具栏
-    self.toolbar = Toolbar.new(self.map)
-    self.toolbar:addTool(GeneralTool.new(self.toolbar, self.map))
-    self.toolbar:addTool(ObjectTool.new(self.toolbar, self.map))
-    self.toolbar:addTool(PathTool.new(self.toolbar, self.map))
-    self.toolbar:addTool(RangeTool.new(self.toolbar, self.map))
+    self.toolbar = require("editor.Toolbar").new(self.map)
+    self.toolbar:addTool(require("editor.GeneralTool").new(self.toolbar, self.map))
+    self.toolbar:addTool(require("editor.ObjectTool").new(self.toolbar, self.map))
+    self.toolbar:addTool(require("editor.PathTool").new(self.toolbar, self.map))
+    self.toolbar:addTool(require("editor.RangeTool").new(self.toolbar, self.map))
 
     -- 创建工具栏的视图
     self.toolbarView = self.toolbar:createView(self.uiLayer, "#ToolbarBg.png", 40)
@@ -55,7 +49,7 @@ function EditorScene:ctor()
     self.toolbar:selectButton("GeneralTool", 1)
 
     -- 创建对象信息面板
-    self.objectInspector = ObjectInspector.new(self.map)
+    self.objectInspector = require("editor.ObjectInspector").new(self.map)
     self.objectInspector:addEventListener("UPDATE_OBJECT", function(event)
         self.toolbar:dispatchEvent(event)
     end)
@@ -66,10 +60,10 @@ function EditorScene:ctor()
         text  = format("module: %s, image: %s", self.map.mapModuleName_, self.map.imageName_),
         size  = 16,
         align = ui.TEXT_ALIGN_LEFT,
-        x     = display.c_left + 10,
-        y     = display.c_bottom + EditorConstants.MAP_TOOLBAR_HEIGHT + 20,
+        x     = display.left + 10,
+        y     = display.bottom + EditorConstants.MAP_TOOLBAR_HEIGHT + 20,
     })
-    self.uiLayer:addChild(self.mapNameLabel)
+    self.mapLayer:addChild(self.mapNameLabel)
 
     -- 注册工具栏事件
     self.toolbar:addEventListener("SELECT_OBJECT", function(event)
@@ -108,6 +102,8 @@ function EditorScene:ctor()
     self.playToolbar = ui.newMenu({toggleDebugButton, stopMapButton})
     self.playToolbar:setVisible(false)
     self:addChild(self.playToolbar)
+
+    self:editMap()
 end
 
 -- 开始运行地图
@@ -124,14 +120,13 @@ function EditorScene:playMap()
     end
 
     local camera = self.map:getCamera()
-    camera:setMargin(0, MapConstants.SIDE_BAR_WIDTH, 0, 0)
-    camera:setScale(0.7)
+    camera:setMargin(0, 0, 0, 0)
     camera:setOffset(0, 0)
 
     self.mapRuntimeC = MapRuntimeC:create()
     self:addChild(self.mapRuntimeC)
 
-    self.mapRuntime = MapRuntime.new(self.map, self.mapRuntimeC)
+    self.mapRuntime = require("app.map.MapRuntime").new(self.map, self.mapRuntimeC)
     self.mapRuntime:preparePlay()
     self.mapRuntime:startPlay()
 end
@@ -151,6 +146,9 @@ function EditorScene:editMap()
     self.toolbar:getView():setVisible(true)
     self.playToolbar:setVisible(false)
     self.mapNameLabel:setVisible(true)
+    if self.map:getDebugLayer() then
+        self.map:getDebugLayer():setVisible(true)
+    end
 
     local camera = self.map:getCamera()
     camera:setMargin(EditorConstants.MAP_PADDING,
@@ -170,7 +168,34 @@ end
 function EditorScene:onTouch(event, x, y)
     if self.mapRuntime then
         -- 如果正在运行地图，将触摸事件传递到地图
-        return self.mapRuntime:onTouch(event, x, y, map)
+        if self.mapRuntime:onTouch(event, x, y, map) == true then
+            return true
+        end
+
+        if event == "began" then
+            self.drag = {
+                startX  = x,
+                startY  = y,
+                lastX   = x,
+                lastY   = y,
+                offsetX = 0,
+                offsetY = 0,
+            }
+            return true
+        end
+
+        if event == "moved" then
+            self.drag.offsetX = x - self.drag.lastX
+            self.drag.offsetY = y - self.drag.lastY
+            self.drag.lastX = x
+            self.drag.lastY = y
+            self.map:getCamera():moveOffset(self.drag.offsetX, self.drag.offsetY)
+
+        else -- "ended" or CCTOUCHCANCELLED
+            self.drag = nil
+        end
+
+        return
     end
 
     -- 如果没有运行地图，则将事件传递到工具栏

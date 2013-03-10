@@ -20,7 +20,6 @@ function CannonBullet:ctor(source, target, delay, spriteName, params)
 end
 
 function CannonBullet:fireBegan()
-    audio.playEffect(GAME_SFX.CANNON_FIRE)
     CannonBullet.super.fireBegan(self)
     self.sprite_:setVisible(true)
 end
@@ -32,8 +31,6 @@ function CannonBullet:hit()
     if not framesLength then framesLength = 15 end
     local framesTime = self.boomFramesTime_
     if not framesTime then framesTime = 0.8 end
-
-    audio.playEffect(GAME_SFX.CANNON_HIT)
 
     local frames    = display.newFrames(framesName, 1, framesLength)
     local boom      = display.newSpriteWithFrame(frames[1])

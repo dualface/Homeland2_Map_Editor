@@ -7,6 +7,7 @@ function __G__TRACKBACK__(errorMessage)
     CCLuaLog("----------------------------------------")
 end
 
+CCFileUtils:sharedFileUtils():addSearchPath("res/")
 CCLuaLoadChunksFromZip("res/framework_precompiled.zip")
 
 xpcall(function()
@@ -14,7 +15,6 @@ xpcall(function()
     require("framework.init")
     require("framework.client.init")
 
-    CCFileUtils:sharedFileUtils():addSearchResolutionsOrder("res/")
     display.addSpriteFramesWithFile("SheetMapBattle.plist", "SheetMapBattle.png")
     display.addSpriteFramesWithFile("SheetEditor.plist", "SheetEditor.png")
 

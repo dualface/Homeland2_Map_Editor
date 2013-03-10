@@ -282,43 +282,6 @@ function MapRuntime:newDecoration(decorationName, target, x, y)
     return decoration
 end
 
---[[--
-
-在地图中放入一艘新船
-
-因为新产生的船会有一个动画效果，所以专门写了一个方法。
-
-]]
-function MapRuntime:newShip(state, isMoving)
-    -- 创建新对象
-    local ship = self:newObject("static", state)
-    -- 显示出生状态
-    ship:showBornStatus()
-    -- 增加移动锁定计数器
-    ship:addMovingLock()
-    -- 增加开火锁定计数器
-    ship:addFireLock()
-
-    audio.playEffect(GAME_SFX.MAP_CREATE_SHIP)
-
-    -- 显示一个动画效果
-    local decoration = self:newDecoration("NewShip", ship)
-    decoration:playAnimationOnceAndRemove()
-
-    -- 开始移动船，但因为移动锁定计数器 > 0，所以舰船并不会动
-    if isMoving then ship:startMoving() end
-
-    self.batch_:performWithDelay(function()
-        -- 等待一段时间后，取消锁定计数器
-        if ship:isDestroyed() then return end
-        if tolua.isnull(ship:getView()) then return end
-        ship:removeMovingLock()
-        ship:removeFireLock()
-    end, 1.0)
-
-    return ship
-end
-
 function MapRuntime:addBullet(bullet)
     self.bullets_[#self.bullets_ + 1] = bullet
 end

@@ -22,10 +22,6 @@ function StaticObject:ctor(id, state, map)
     self.valid_         = true
     self.sprite_        = nil
     self.spriteSize_    = nil
-
-    if type(self.initVisible_) ~= "boolean" then
-        self.initVisible_ = true
-    end
 end
 
 function StaticObject:getDefineId()
@@ -42,14 +38,6 @@ end
 
 function StaticObject:setFlipSprite(flipSprite)
     self.flipSprite_ = flipSprite
-end
-
-function StaticObject:isInitVisible()
-    return self.initVisible_
-end
-
-function StaticObject:setInitVisible(visible)
-    self.initVisible_ = visible
 end
 
 function StaticObject:getView()
@@ -110,14 +98,12 @@ function StaticObject:setVisible(visible)
 end
 
 function StaticObject:preparePlay()
-    self:setVisible(self.initVisible_)
 end
 
 function StaticObject:vardump()
     local state = StaticObject.super.vardump(self)
     state.defineId    = self.defineId_
     state.flipSprite  = self.flipSprite_
-    state.initVisible = self.visible_
     return state
 end
 

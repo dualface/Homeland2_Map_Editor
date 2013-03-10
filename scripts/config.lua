@@ -1,5 +1,7 @@
 
 DEBUG                   = 2
+DEBUG_FPS               = false
+DEBUG_MEM_USAGE         = false
 DEVICE_ORIENTATION      = "landscape"
 CONFIG_SCREEN_WIDTH     = 960
 CONFIG_SCREEN_HEIGHT    = 640

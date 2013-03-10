@@ -15,13 +15,11 @@ function ArrowBullet:ctor(source, target, delay)
 end
 
 function ArrowBullet:fireBegan()
-    audio.playEffect(GAME_SFX.ARROW_FIRE)
     ArrowBullet.super.fireBegan(self)
     self.sprite_:setVisible(true)
 end
 
 function ArrowBullet:hit()
-    audio.playEffect(GAME_SFX.ARROW_HIT)
     local arrow = display.newSprite("#BrokenArrow01.png")
     arrow.hideDelay_ = 2.4
     local rotation = self.sprite_:getRotation()

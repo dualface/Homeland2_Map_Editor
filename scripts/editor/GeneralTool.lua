@@ -39,24 +39,16 @@ end
 
 function GeneralTool:selected(selectedButtonName)
     if selectedButtonName == "SaveMap" then
-        local saveOk = self.map_:dumpToFile()
         self.toolbar_:selectButton("GeneralTool", 1)
-
-        if saveOk then
-            local label = display.newSprite("#SaveMapOkLabel.png")
-            local x, y = self.buttons[2].sprite:getPosition()
-            label:setPosition(x + 60, y + 46)
-            self.toolbar_:getView():addChild(label)
-
-            transition.moveBy(label, {y = 10, time = 0.5})
-            transition.fadeOut(label, {time = 0.5, delay = 1.7, onComplete = function()
-                label:removeSelf()
-            end})
+        if self.map_:dumpToFile() then
+            self.toolbar_:showNotice("Save Map OK")
         end
+
     elseif selectedButtonName == "ToggleDebug" then
         local debugLayer = self.map_:getDebugLayer()
         debugLayer:setVisible(not debugLayer:isVisible())
         self.toolbar_:selectButton("GeneralTool", 1)
+
     elseif selectedButtonName == "ToggleBackground" then
         local backgroundLayer = self.map_:getBackgroundLayer()
         local opacity = backgroundLayer:getOpacity()
@@ -66,8 +58,8 @@ function GeneralTool:selected(selectedButtonName)
             opacity = 255
         end
         backgroundLayer:setOpacity(opacity)
-        -- backgroundLayer:setVisible(not backgroundLayer:isVisible())
         self.toolbar_:selectButton("GeneralTool", 1)
+
     elseif selectedButtonName == "PlayMap" then
         self.toolbar_:dispatchEvent({name = "PLAY_MAP"})
         self.toolbar_:selectButton("GeneralTool", 1)

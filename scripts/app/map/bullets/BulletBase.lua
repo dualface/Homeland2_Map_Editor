@@ -1,4 +1,5 @@
 
+local math2d = require("math2d")
 local BulletBase = class("BulletBase")
 
 BulletBase.FLAG_NORMAL     = 0

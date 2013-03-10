@@ -24,7 +24,6 @@ EditorConstants.PROPERTY_PREFIX_LEN    = 16
 EditorConstants.BEHAVIOR_LABEL_WIDTH   = 110
 
 EditorConstants.INSPECTOR_WIDTH        = 360
-EditorConstants.PATH_INSPECTOR_WIDTH   = 200
 
 EditorConstants.PANEL_BUTTON_SIZE      = 20
 EditorConstants.PANEL_BUTTON_OFFSET    = 4
