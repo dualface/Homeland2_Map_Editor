@@ -10,3 +10,7 @@ proj.win32/Homeland2/*.sdf
 proj.win32/Homeland2/*.user
 proj.win32/Homeland2/*.aps
 proj.win32/Homeland2/*.suo
+proj.android/assets/*
+proj.android/obj/*
+proj.android/libs/*
+
