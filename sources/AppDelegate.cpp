@@ -8,13 +8,14 @@
 
 // lua extensions
 #include "lua_extensions.h"
-// cocos2dx_extensions luabinding
-#include "cocos2dx_extensions_luabinding.h"
 // cocos2dx_extra luabinding
 #include "luabinding/cocos2dx_extra_luabinding.h"
 
-// MapRuntimeC
-#include "MapRuntimeC_luabinding.h"
+// thrid_party
+#include "third_party_luabinding.h"
+
+// CCBReader
+#include "Lua_extensions_CCB.h"
 
 using namespace std;
 using namespace cocos2d;
@@ -24,7 +25,7 @@ AppDelegate::AppDelegate()
 {
     // fixed me
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_LEAK_CHECK_DF);
-} 
+}
 
 AppDelegate::~AppDelegate()
 {
@@ -38,32 +39,37 @@ bool AppDelegate::applicationDidFinishLaunching()
     CCDirector *pDirector = CCDirector::sharedDirector();
     pDirector->setOpenGLView(CCEGLView::sharedOpenGLView());
     pDirector->setProjection(kCCDirectorProjection2D);
-    
+
     // set FPS. the default value is 1.0/60 if you don't call this
     pDirector->setAnimationInterval(1.0 / 60);
-    
+
     // register lua engine
     CCLuaEngine *pEngine = CCLuaEngine::defaultEngine();
-    CCScriptEngineManager::sharedManager()->setScriptEngine(pEngine);    
-    
+    CCScriptEngineManager::sharedManager()->setScriptEngine(pEngine);
+
     CCLuaStack *pStack = pEngine->getLuaStack();
     lua_State* L = pStack->getLuaState();
-    
+
     // load lua extensions
     luaopen_lua_extensions(L);
-    // load cocos2dx_extensions luabinding
-    luaopen_cocos2dx_extensions_luabinding(L);
     // load cocos2dx_extra luabinding
     luaopen_cocos2dx_extra_luabinding(L);
 
-    // load MapRuntimeC luabinding
-    luaopen_MapRuntimeC_luabinding(L);
-    
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/main_editor.lua");
-#else
-    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename(getStartupScriptFilename().c_str());
-#endif
+    // thrid_party
+    luaopen_third_party_luabinding(L);
+
+    // CCBReader
+    tolua_extensions_ccb_open(L);
+
+    // load framework
+    if (m_projectConfig.isLoadPrecompiledFramework())
+    {
+        const string precompiledFrameworkPath = SimulatorConfig::sharedDefaults()->getPrecompiledFrameworkPath();
+        pStack->loadChunksFromZip(precompiledFrameworkPath.c_str());
+    }
+
+    // load script
+    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename(m_projectConfig.getScriptFileRealPath().c_str());
     int pos;
     while ((pos = path.find_first_of("\\")) != std::string::npos)
     {
@@ -74,24 +80,24 @@ bool AppDelegate::applicationDidFinishLaunching()
     {
         const string dir = path.substr(0, p);
         pStack->addSearchPath(dir.c_str());
-        
+
         p = dir.find_last_of("/\\");
         if (p != dir.npos)
         {
             pStack->addSearchPath(dir.substr(0, p).c_str());
         }
     }
-    
+
     string env = "__LUA_STARTUP_FILE__=\"";
     env.append(path);
     env.append("\"");
     pEngine->executeString(env.c_str());
-    
+
     CCLOG("------------------------------------------------");
     CCLOG("LOAD LUA FILE: %s", path.c_str());
     CCLOG("------------------------------------------------");
     pEngine->executeScriptFile(path.c_str());
-    
+
     return true;
 }
 
@@ -113,4 +119,9 @@ void AppDelegate::applicationWillEnterForeground()
     SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
     SimpleAudioEngine::sharedEngine()->resumeAllEffects();
     CCNotificationCenter::sharedNotificationCenter()->postNotification("APP_ENTER_FOREGROUND");
+}
+
+void AppDelegate::setProjectConfig(const ProjectConfig& config)
+{
+    m_projectConfig = config;
 }

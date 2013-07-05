@@ -23,7 +23,13 @@
  ****************************************************************************/
 
 #import "EAGLView.h"
+#import "NSApplication+SheetAdditions.h"
+
 #include <string>
+#include "SimulatorConfig.h"
+#include "AppDelegate.h"
+
+class AppControllerBridge;
 
 @interface AppController : NSObject <NSApplicationDelegate, NSWindowDelegate>
 {
@@ -34,35 +40,43 @@
     BOOL waitForRestart;
     BOOL isAlwaysOnTop;
     BOOL isMaximized;
-    
-    NSSize frameSize;
-    NSSize prevFrameSize;
-    std::string workingDir;
-    std::string startupScriptFilename;
+
+    AppDelegate *app;
+    ProjectConfig projectConfig;
+    BOOL hasPopupDialog;
+
+    int debugLogFile;
+
+    AppControllerBridge *bridge;
 }
 
-@property (nonatomic, assign) IBOutlet NSWindow* window;
-@property (nonatomic, assign) IBOutlet EAGLView* glView;
 @property (nonatomic, assign) IBOutlet NSMenu* menu;
 
--(IBAction) openWorkingDirectory:(id)sender;
--(IBAction) selectStartupScript:(id)sender;
--(IBAction) restart:(id)sender;
+- (void) welcomeNewProject;
+- (void) welcomeOpen;
+- (void) welcomeSamples;
+- (void) welcomeGetStarted;
 
--(IBAction) resize_iPhone3G:(id)sender;
--(IBAction) resize_iPhone4:(id)sender;
--(IBAction) resize_iPhone5:(id)sender;
--(IBAction) resize_iPad:(id)sender;
--(IBAction) resize_New_iPad:(id)sender;
--(IBAction) resize_Android_854_480:(id)sender;
--(IBAction) resize_Android_800_480:(id)sender;
--(IBAction) resize_Android_1024_600:(id)sender;
--(IBAction) resize_Android_1280_720:(id)sender;
--(IBAction) resize_Android_1280_800:(id)sender;
--(IBAction) toggleMaximize:(id)sender;
--(IBAction) toggleAlwaysOnTop:(id)sender;
+- (IBAction) onServicePreferences:(id)sender;
 
--(IBAction) toggleFullScreen:(id)sender;
--(IBAction) exitFullScreen:(id)sender;
+- (IBAction) onFileNewProject:(id)sender;
+- (IBAction) onFileNewPlayer:(id)sender;
+- (IBAction) onFileOpen:(id)sender;
+- (IBAction) onFileOpenRecentClearMenu:(id)sender;
+- (IBAction) onFileWelcome:(id)sender;
+- (IBAction) onFileClose:(id)sender;
+
+- (IBAction) onPlayerWriteDebugLogToFile:(id)sender;
+- (IBAction) onPlayerOpenDebugLog:(id)sender;
+- (IBAction) onPlayerRelaunch:(id)sender;
+- (IBAction) onPlayerShowProjectSandbox:(id)sender;
+- (IBAction) onPlayerShowProjectFiles:(id)sender;
+
+- (IBAction) onScreenPortait:(id)sender;
+- (IBAction) onScreenLandscape:(id)sender;
+- (IBAction) onScreenActual:(id)sender;
+- (IBAction) onScreenZoomOut:(id)sender;
+
+- (IBAction) onWindowAlwaysOnTop:(id)sender;
 
 @end

@@ -6,7 +6,7 @@
 #include "cocos2d.h"
 
 using namespace std;
-USING_NS_CC;
+using namespace cocos2d;
 
 #if defined(_WINDOWS)
 #define DIRECTORY_SEPARATOR "\\"
@@ -20,80 +20,82 @@ class ProjectConfig
 {
 public:
     ProjectConfig(void)
-    : m_scriptFile("$WORKDIR/scripts/main.lua")
+    : m_scriptFile("$PROJDIR/scripts/main.lua")
+    , m_writablePath("")
     , m_packagePath("")
-    , m_frameSize(320, 480)
+    , m_frameSize(960, 540)
     , m_frameScale(1.0f)
     , m_showConsole(true)
-    , m_windowOffset(-1, -1)
+    , m_loadPrecompiledFramework(true)
+    , m_writeDebugLogToFile(true)
+    , m_windowOffset(0, 0)
     {
         normalize();
     }
 
-    const string getProjectDir(void) {
-        return m_projectDir;
-    }
+    void resetToWelcome(void);
+
+    const string getProjectDir(void);
     void setProjectDir(const string projectDir);
 
-    const string getScriptFile(void) {
-        return m_scriptFile;
-    }
-    const string getScriptFilePath(void);
+    const string getScriptFile(void);
+    const string getScriptFileRealPath(void);
     void setScriptFile(const string scriptFile);
 
-    const string getPackagePath(void) {
-        return m_packagePath;
-    }
+    const string getWritablePath(void);
+    const string getWritableRealPath(void);
+    void setWritablePath(const string writablePath);
+
+    const string getPackagePath(void);
     const string getNormalizedPackagePath(void);
-    void setPackagePath(const string packagePath) {
-        m_packagePath = packagePath;
-    }
+    void setPackagePath(const string packagePath);
     void addPackagePath(const string packagePath);
     const vector<string> getPackagePathArray(void);
 
-    const CCSize getFrameSize(void) {
-        return m_frameSize;
-    }
-    void setFrameSize(CCSize frameSize) {
-        CCAssert(frameSize.width > 0 && frameSize.height > 0, "Invalid frameSize");
-        m_frameSize = frameSize;
-    }
-    bool isLandscapeFrame(void) {
-        return m_frameSize.width > m_frameSize.height;
-    }
+    const CCSize getFrameSize(void);
+    void setFrameSize(CCSize frameSize);
+    bool isLandscapeFrame(void);
+    void changeFrameOrientation(void);
+    void changeFrameOrientationToPortait(void);
+    void changeFrameOrientationToLandscape(void);
 
-    const float getFrameScale(void) {
-        return m_frameScale;
-    }
-    void setFrameScale(float frameScale) {
-        CCAssert(frameScale > 0, "Invalid frameScale");
-        m_frameScale = frameScale;
-    }
+    const float getFrameScale(void);
+    void setFrameScale(float frameScale);
 
-    const bool isShowConsole(void) {
-        return m_showConsole;
-    }
-    void setShowConsole(bool showConsole) {
-        m_showConsole = showConsole;
-    }
+    const bool isShowConsole(void);
+    void setShowConsole(bool showConsole);
 
-    const CCPoint getWindowOffset(void) {
-        return m_windowOffset;
-    }
-    void setWindowOffset(CCPoint windowOffset) {
-        m_windowOffset = windowOffset;
-    }
+    bool isLoadPrecompiledFramework(void);
+    void setLoadPrecompiledFramework(bool load);
+
+    const bool isWriteDebugLogToFile(void);
+    void setWriteDebugLogToFile(bool writeDebugLogToFile);
+
+    const CCPoint getWindowOffset(void);
+    void setWindowOffset(CCPoint windowOffset);
+
+    void parseCommandLine(vector<string>& args);
+    const string makeCommandLine(void);
+
+    bool validate(void);
+    void dump(void);
 
 private:
     string	m_projectDir;
     string	m_scriptFile;
     string	m_packagePath;
+    string  m_writablePath;
     CCSize	m_frameSize;
     float	m_frameScale;
     bool	m_showConsole;
+    bool    m_loadPrecompiledFramework;
+    bool    m_writeDebugLogToFile;
     CCPoint	m_windowOffset;
 
     void normalize(void);
+    const string replaceProjectDirToMacro(const string& path);
+    const string replaceProjectDirToFullPath(const string& path);
+    bool isAbsolutePath(const string& path);
 };
 
 
@@ -112,30 +114,36 @@ typedef struct _SimulatorScreenSize {
     }
 } SimulatorScreenSize;
 
+typedef vector<SimulatorScreenSize> ScreenSizeArray;
+typedef ScreenSizeArray::iterator ScreenSizeArrayIterator;
+
 class SimulatorConfig
 {
 public:
     static SimulatorConfig *sharedDefaults(void);
-    
-    int numScreenSize(void) {
-        return m_screenSizeArray.size();
-    }
-    const SimulatorScreenSize getScreenSize(int index) {
-        return m_screenSizeArray.at(index);
-    }
+
+    // predefined screen size
+    int getScreenSizeCount(void);
+    const SimulatorScreenSize getScreenSize(int index);
     int checkScreenSize(const CCSize& size);
+
+    // set quick-cocos2d-x root path
+    void setQuickCocos2dxRootPath(const char *path);
+    const string getQuickCocos2dxRootPath(void);
+
+    // get precompiled framework path
+    const string getPrecompiledFrameworkPath(void);
 
     // helper
     static void makeNormalizePath(string *path, const char *directorySeparator = NULL);
-    
+
 private:
     SimulatorConfig(void);
 
     static SimulatorConfig *s_sharedInstance;
 
-    typedef vector<SimulatorScreenSize> ScreenSizeArray;
-    typedef ScreenSizeArray::iterator ScreenSizeArrayIterator;
     ScreenSizeArray m_screenSizeArray;
+    string m_quickCocos2dxRootPath;
 };
 
 #endif /* __PROJECT_CONFIG_H_ */
