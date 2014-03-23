@@ -31,7 +31,7 @@ function ObjectFactory.newObject(classId, id, state, map)
         end
 
     else
-        assert(false, format("Map:newObject() - invalid classId %s", tostring(classId)))
+        assert(false, string.format("Map:newObject() - invalid classId %s", tostring(classId)))
     end
 
     return object

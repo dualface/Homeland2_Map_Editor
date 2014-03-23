@@ -160,9 +160,9 @@ end
 
 function ObjectBase:unbindBehavior(behaviorName)
     assert(self.behaviorObjects_ and self.behaviorObjects_[behaviorName] ~= nil,
-           format("ObjectBase:unbindBehavior() - behavior %s not binding", behaviorName))
+           string.format("ObjectBase:unbindBehavior() - behavior %s not binding", behaviorName))
     assert(not self.behaviorDepends_ or not self.behaviorDepends_[behaviorName],
-           format("ObjectBase:unbindBehavior() - behavior %s depends by other binding", behaviorName))
+           string.format("ObjectBase:unbindBehavior() - behavior %s depends by other binding", behaviorName))
 
     local behavior = self.behaviorObjects_[behaviorName]
     for i, dependBehaviorName in pairs(behavior:getDepends()) do
@@ -230,11 +230,11 @@ function ObjectBase:bindMethod(behavior, methodName, method, callOriginMethodLas
     chain[3] = newMethod
     table.insert(self.bindingMethods_[methodName], chain)
 
-    -- print(format("[%s]:bindMethod(%s, %s)", tostring(self), behavior:getName(), methodName))
+    -- print(string.format("[%s]:bindMethod(%s, %s)", tostring(self), behavior:getName(), methodName))
     -- for i, chain in ipairs(self.bindingMethods_[methodName]) do
-    --     print(format("  index: %d, origin: %s, new: %s", i, tostring(chain[2]), tostring(chain[3])))
+    --     print(string.format("  index: %d, origin: %s, new: %s", i, tostring(chain[2]), tostring(chain[3])))
     -- end
-    -- print(format("  current: %s", tostring(self[methodName])))
+    -- print(string.format("  current: %s", tostring(self[methodName])))
 end
 
 function ObjectBase:unbindMethod(behavior, methodName)
@@ -249,11 +249,11 @@ function ObjectBase:unbindMethod(behavior, methodName)
         local chain = methods[i]
 
         if chain[1] == behavior then
-            -- print(format("[%s]:unbindMethod(%s, %s)", tostring(self), behavior:getName(), methodName))
+            -- print(string.format("[%s]:unbindMethod(%s, %s)", tostring(self), behavior:getName(), methodName))
             if i < count then
                 -- 如果移除了中间的节点，则将后一个节点的 origin 指向前一个节点的 origin
                 -- 并且对象的方法引用的函数不变
-                -- print(format("  remove method from index %d", i))
+                -- print(string.format("  remove method from index %d", i))
                 methods[i + 1][2] = chain[2]
             elseif count > 1 then
                 -- 如果移除尾部的节点，则对象的方法引用的函数指向前一个节点的 new
@@ -269,10 +269,10 @@ function ObjectBase:unbindMethod(behavior, methodName)
 
             -- if self.bindingMethods_[methodName] then
             --     for i, chain in ipairs(self.bindingMethods_[methodName]) do
-            --         print(format("  index: %d, origin: %s, new: %s", i, tostring(chain[2]), tostring(chain[3])))
+            --         print(string.format("  index: %d, origin: %s, new: %s", i, tostring(chain[2]), tostring(chain[3])))
             --     end
             -- end
-            -- print(format("  current: %s", tostring(self[methodName])))
+            -- print(string.format("  current: %s", tostring(self[methodName])))
 
             break
         end

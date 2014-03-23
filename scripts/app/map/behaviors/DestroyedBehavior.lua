@@ -21,7 +21,7 @@ function DestroyedBehavior:bind(object)
 
     local function setMaxHp(object, maxHp)
         maxHp = toint(maxHp)
-        assert(maxHp > 0, format("DestroyedBehavior.setMaxHp() - invalid maxHp %s", tostring(maxHp)))
+        assert(maxHp > 0, string.format("DestroyedBehavior.setMaxHp() - invalid maxHp %s", tostring(maxHp)))
         object.maxHp_ = maxHp
     end
     object:bindMethod(self, "setMaxHp", setMaxHp)
@@ -32,9 +32,9 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "getHp", getHp)
 
     local function setHp(object, hp)
-        hp = tonumber(hp)
+        hp = tonum(hp)
         assert(hp >= 0 and hp <= object.maxHp_,
-               format("DestroyedBehavior.setHp() - invalid hp %s", tostring(hp)))
+               string.format("DestroyedBehavior.setHp() - invalid hp %s", tostring(hp)))
         object.hp_ = hp
         object.destroyed_ = object.hp_ <= 0
         object.hp__ = nil
@@ -42,8 +42,8 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "setHp", setHp)
 
     local function decreaseHp(object, amount)
-        amount = tonumber(amount)
-        assert(amount >= 0, format("DestroyedBehavior.decreaseHp() - invalid amount %s", tostring(amount)))
+        amount = tonum(amount)
+        assert(amount >= 0, string.format("DestroyedBehavior.decreaseHp() - invalid amount %s", tostring(amount)))
         object.hp_ = object.hp_ - amount
         if object.hp_ <= 0 then
             object.hp_ = 0
@@ -53,8 +53,8 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "decreaseHp", decreaseHp)
 
     local function increaseHp(object, amount)
-        amount = tonumber(amount)
-        assert(amount >= 0, format("DestroyedBehavior.increaseHp() - invalid amount %s", tostring(amount)))
+        amount = tonum(amount)
+        assert(amount >= 0, string.format("DestroyedBehavior.increaseHp() - invalid amount %s", tostring(amount)))
         object.hp_ = object.hp_ + amount
         if object.hp_ >= object.maxHp_ then
             object.hp_ = object.maxHp_
@@ -64,7 +64,7 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "increaseHp", increaseHp)
 
     local function createView(object, batch, marksLayer, debugLayer)
-        object.hpOutlineSprite_ = display.newSprite(format("#ObjectHpOutline.png"))
+        object.hpOutlineSprite_ = display.newSprite(string.format("#ObjectHpOutline.png"))
         batch:addChild(object.hpOutlineSprite_, MapConstants.HP_BAR_ZORDER)
 
         if object:getCampId() == MapConstants.PLAYER_CAMP then

@@ -49,7 +49,7 @@ function StaticObject:createView(batch, marksLayer, debugLayer)
 
     if self.framesName_ then
         local frames = display.newFrames(self.framesName_, self.framesBegin_, self.framesLength_)
-        self.sprite_ = display.newSpriteWithFrame(frames[1])
+        self.sprite_ = display.newSprite(frames[1])
         self.sprite_:playAnimationForever(display.newAnimation(frames, self.framesTime_))
     else
         local imageName = self.imageName_

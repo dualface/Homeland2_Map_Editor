@@ -94,7 +94,7 @@ function StaticObjectsProperties.getAllIds()
 end
 
 function StaticObjectsProperties.get(defineId)
-    assert(defines[defineId], format("StaticObjectsProperties.get() - invalid defineId %s", tostring(defineId)))
+    assert(defines[defineId], string.format("StaticObjectsProperties.get() - invalid defineId %s", tostring(defineId)))
     return clone(defines[defineId])
 end
 

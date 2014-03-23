@@ -127,7 +127,7 @@ function MapEventHandler:showShipExplode(object)
     object:addCollisionLock()
 
     for i = 1, 12 do
-        local decoration = runtime:newDecoration(format("ShipExplodeSmall%02d", math.random(1, 2)), object)
+        local decoration = runtime:newDecoration(string.format("ShipExplodeSmall%02d", math.random(1, 2)), object)
         decoration:setDelay(math.random(2, 5) / 100 * (i - 1))
         decoration:setVisible(true)
         decoration:playAnimationOnceAndRemove()

@@ -33,20 +33,20 @@ end
 
 function Path:insertPointAfterIndex(index, x, y)
     assert(index >= 0 and index <= #self.points_,
-           format("Path:insertPointAfterIndex() - invalid point index %s", tostring(index)))
+           string.format("Path:insertPointAfterIndex() - invalid point index %s", tostring(index)))
     table.insert(self.points_, index + 1, {x, y})
     self.valid_ = true
 end
 
 function Path:movePoint(index, x, y)
     assert(index > 0 and index <= #self.points_,
-           format("Path:movePoint() - invalid point index %s", tostring(index)))
+           string.format("Path:movePoint() - invalid point index %s", tostring(index)))
     self.points_[index] = {math.round(x), math.round(y)}
 end
 
 function Path:removePoint(index)
     assert(index > 0 and index <= #self.points_,
-           format("Path:removePoint() - invalid point index %s", tostring(index)))
+           string.format("Path:removePoint() - invalid point index %s", tostring(index)))
     table.remove(self.points_, index)
     self.valid_ = #self.points_ > 0
 end
@@ -93,7 +93,7 @@ function Path:dump(label)
 
     label = label or "<var>"
     local lines = {}
-    lines[#lines + 1] = format("%s = {", label)
+    lines[#lines + 1] = string.format("%s = {", label)
     lines[#lines + 1] = "    points = {"
 
     local function _v(v, len)
@@ -105,7 +105,7 @@ function Path:dump(label)
     local points = {}
     local len = 0
     for i, p in ipairs(state.points) do
-        local pair = format("{%s, %s}", _v(math.round(p[1]), 4), _v(math.round(p[2]), 4))
+        local pair = string.format("{%s, %s}", _v(math.round(p[1]), 4), _v(math.round(p[2]), 4))
         points[#points + 1] = pair
         len = len + string.len(pair)
         if len >= 70 then

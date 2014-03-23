@@ -26,8 +26,8 @@ function Map:ctor(id, debug)
     self.id_               = id
     self.debug_            = debug
     self.ready_            = false
-    self.mapModuleName_    = format("maps.Map%sData", id)
-    self.eventModuleName_  = format("maps.Map%sEvents", id)
+    self.mapModuleName_    = string.format("maps.Map%sData", id)
+    self.eventModuleName_  = string.format("maps.Map%sEvents", id)
 
     local ok, data = pcall(function() return require(self.mapModuleName_) end)
     if not ok or type(data) ~= "table" then
@@ -44,7 +44,7 @@ function Map:init()
     self.height_            = self.data_.size.height
     self.imageName_         = self.data_.imageName
     if not self.imageName_ then
-        self.imageName_ = format("Map%sBg.png", self.id_)
+        self.imageName_ = string.format("Map%sBg.png", self.id_)
     end
 
     self.bgSprite_          = nil
@@ -67,7 +67,7 @@ function Map:init()
     for i, path in pairs(self:getObjectsByClassId("path")) do
         path:validate()
         if not path:isValid() then
-            echoInfo(format("Map:init() - invalid path %s", path:getId()))
+            echoInfo(string.format("Map:init() - invalid path %s", path:getId()))
             self:removeObject(path)
         end
     end
@@ -78,7 +78,7 @@ function Map:init()
         if classId ~= "path" then
             object:validate()
             if not object:isValid() then
-                echoInfo(format("Map:init() - invalid object %s", object:getId()))
+                echoInfo(string.format("Map:init() - invalid object %s", object:getId()))
                 self:removeObject(object)
             end
         end
@@ -144,7 +144,7 @@ end
 ]]
 function Map:newObject(classId, state, id)
     if not id then
-        id = format("%s:%d", classId, self.nextObjectIndex_)
+        id = string.format("%s:%d", classId, self.nextObjectIndex_)
         self.nextObjectIndex_ = self.nextObjectIndex_ + 1
     end
 
@@ -168,7 +168,7 @@ function Map:newObject(classId, state, id)
     if self.ready_ then
         object:validate()
         if not object:isValid() then
-            echoInfo(format("Map:newObject() - invalid object %s", id))
+            echoInfo(string.format("Map:newObject() - invalid object %s", id))
             self:removeObject(object)
             return nil
         end
@@ -189,7 +189,7 @@ end
 ]]
 function Map:removeObject(object)
     local id = object:getId()
-    assert(self.objects_[id] ~= nil, format("Map:removeObject() - object %s not exists", tostring(id)))
+    assert(self.objects_[id] ~= nil, string.format("Map:removeObject() - object %s not exists", tostring(id)))
 
     self.objects_[id] = nil
     self.objectsByClass_[object:getClassId()][id] = nil
@@ -220,7 +220,7 @@ end
 
 ]]
 function Map:getObject(id)
-    assert(self:isObjectExists(id), format("Map:getObject() - object %s not exists", tostring(id)))
+    assert(self:isObjectExists(id), string.format("Map:getObject() - object %s not exists", tostring(id)))
     return self.objects_[id]
 end
 
@@ -436,12 +436,12 @@ function Map:dump()
     local lines = {}
 
     lines[#lines + 1] = ""
-    lines[#lines + 1] = format("------------ MAP %s ------------", self.id_)
+    lines[#lines + 1] = string.format("------------ MAP %s ------------", self.id_)
     lines[#lines + 1] = ""
     lines[#lines + 1] = "local map = {}"
     lines[#lines + 1] = ""
-    lines[#lines + 1] = format("map.size = {width = %d, height = %d}", self.width_, self.height_)
-    lines[#lines + 1] = format("map.imageName = \"%s\"", self.imageName_)
+    lines[#lines + 1] = string.format("map.size = {width = %d, height = %d}", self.width_, self.height_)
+    lines[#lines + 1] = string.format("map.imageName = \"%s\"", self.imageName_)
     lines[#lines + 1] = ""
 
     -- objects
@@ -451,7 +451,7 @@ function Map:dump()
     for i, id in ipairs(allid) do
         lines[#lines + 1] = ""
         lines[#lines + 1] = self.objects_[id]:dump("local object")
-        lines[#lines + 1] = format("objects[\"%s\"] = object", id)
+        lines[#lines + 1] = string.format("objects[\"%s\"] = object", id)
         lines[#lines + 1] = ""
         lines[#lines + 1] = "----"
     end

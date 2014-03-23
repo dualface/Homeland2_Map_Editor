@@ -95,7 +95,6 @@ function PathTool:showPointLabel(x, y, text)
 
     self.currentPointLabel_:setString(text)
     self.currentPointLabel_:setPosition(x, y)
-    self.currentPointLabel_:pixels()
 end
 
 function PathTool:removePointLabel()
@@ -109,7 +108,6 @@ function PathTool:movePoint(x, y)
     self.currentPath_:movePoint(self.currentPointIndex_, x, y)
     self.currentPath_:updateView()
     self.currentPointLabel_:setPosition(x + 10, y + 20)
-    self.currentPointLabel_:pixels()
 end
 
 function PathTool:checkPointAtPath(x, y)

@@ -299,7 +299,8 @@ function ObjectTool:showToolbox(mapX, mapY)
     local bgHeight = rows * ObjectTool.TOOLBOX_PADDING + 4
     local rect = display.newRect(bgWidth, bgHeight)
     rect:setFill(true)
-    rect:setColor(120, 120, 120, 80)
+    rect:setLineColor(ccc4FFromccc4B(ccc4(120, 120, 120, 80)))
+    rect:setOpacity(80)
     rect:setPosition(x + bgWidth / 2 - ObjectTool.TOOLBOX_PADDING / 2 - 2,
                      y - bgHeight / 2 + ObjectTool.TOOLBOX_PADDING / 2 + 2)
     layer:addChild(rect)
@@ -309,7 +310,7 @@ function ObjectTool:showToolbox(mapX, mapY)
         local define = StaticObjectsProperties.get(id)
         local sprite
         if define.framesName then
-            sprite = display.newSprite("#" .. format(define.framesName, define.framesBegin))
+            sprite = display.newSprite("#" .. string.format(define.framesName, define.framesBegin))
         else
             local imageName = define.imageName
             if type(imageName) == "table" then
@@ -331,7 +332,8 @@ function ObjectTool:showToolbox(mapX, mapY)
         local rect = display.newRect(ObjectTool.TOOLBOX_ICON_SIZE,
                                      ObjectTool.TOOLBOX_ICON_SIZE)
         rect:setFill(true)
-        rect:setColor(32, 32, 32, 255 * 0.7)
+        rect:setLineColor(ccc4FFromccc4B(ccc4(32, 32, 32, 120)))
+        rect:setOpacity(70)
         rect:setPosition(x, y)
         layer:addChild(rect)
 

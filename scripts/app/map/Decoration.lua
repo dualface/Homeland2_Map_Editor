@@ -6,7 +6,7 @@ local Decoration = class("Decoration")
 function Decoration:ctor(decorationName, staticIndex)
     local define = StaticObjectsDecorationProperties.get(decorationName)
     assert(define,
-           format("Decoration.ctor() - invalid decoration %s", decorationName))
+           string.format("Decoration.ctor() - invalid decoration %s", decorationName))
 
     for k,v in pairs(define) do
         self[k .. "_"] = v
@@ -27,10 +27,10 @@ function Decoration:ctor(decorationName, staticIndex)
     self.zorder_  = toint(self.zorder_)
     self.offsetX_ = toint(self.offsetX_)
     self.offsetY_ = toint(self.offsetY_)
-    self.delay_   = tonumber(self.delay_)
+    self.delay_   = tonum(self.delay_)
     self.actions_ = {}
 
-    self.scale_    = tonumber(self.scale_)
+    self.scale_    = tonum(self.scale_)
     if self.scale_ == 0 then
         self.scale_ = 1
     end
@@ -56,7 +56,7 @@ function Decoration:createView(batch)
         self.frames_ = display.newFrames(self.framesName_, self.framesBegin_, self.framesLength_, self.framesReversed_)
         self.animation_ = display.newAnimation(self.frames_, self.framesTime_)
         self.animation_:retain()
-        self.sprite_ = display.newSpriteWithFrame(self.frames_[1])
+        self.sprite_ = display.newSprite(self.frames_[1])
     else
         local imageName = self.imageName_
         if type(imageName) == "table" then

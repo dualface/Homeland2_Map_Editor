@@ -13,7 +13,7 @@ local EditorScene = class("EditorScene", function()
 end)
 
 function EditorScene:ctor()
-    local bg = display.newBackgroundTilesSprite("EditorBg.png")
+    local bg = display.newTilesSprite("EditorBg.png")
     self:addChild(bg)
 
     -- mapLayer 包含地图的整个视图
@@ -57,7 +57,7 @@ function EditorScene:ctor()
 
     -- 创建地图名称文字标签
     self.mapNameLabel = ui.newTTFLabelWithOutline({
-        text  = format("module: %s, image: %s", self.map.mapModuleName_, self.map.imageName_),
+        text  = string.format("module: %s, image: %s", self.map.mapModuleName_, self.map.imageName_),
         size  = 16,
         align = ui.TEXT_ALIGN_LEFT,
         x     = display.left + 10,

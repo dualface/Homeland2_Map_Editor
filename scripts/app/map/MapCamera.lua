@@ -128,7 +128,6 @@ function MapCamera:zoomTo(scale, x, y)
         y = self.offsetLimit_.maxY
     end
 
-    local x, y = display.pixels(x, y)
     self.offsetX_, self.offsetY_ = x, y
 
     transition.moveTo(backgroundLayer, {
@@ -176,7 +175,6 @@ function MapCamera:setOffset(x, y, movingSpeed, onComplete)
         y = self.offsetLimit_.maxY
     end
 
-    local x, y = display.pixels(x, y)
     self.offsetX_, self.offsetY_ = x, y
 
     if type(movingSpeed) == "number" and movingSpeed > 0 then
@@ -209,7 +207,6 @@ function MapCamera:setOffset(x, y, movingSpeed, onComplete)
             transition.moveTo(self.debugLayer_, {x = x, y = y, time = movingTime})
         end
     else
-        x, y = display.pixels(x, y)
         self.map_:getBackgroundLayer():setPosition(x, y)
         self.map_:getBatchLayer():setPosition(x, y)
         self.map_:getMarksLayer():setPosition(x, y)

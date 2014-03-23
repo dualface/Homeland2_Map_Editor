@@ -40,11 +40,11 @@ function MapRuntime:ctor(map, runtimeC)
     self.skillNeedTime_        = {0, 0, 0, 0, 0}
     self.colls_                = {} -- 用于 MapRuntimeC
 
-    local eventHandlerModuleName = format("maps.Map%sEvents", map:getId())
+    local eventHandlerModuleName = string.format("maps.Map%sEvents", map:getId())
     local eventHandlerModule = require(eventHandlerModuleName)
     self.handler_ = eventHandlerModule.new(self, map)
 
-    require("framework.client.api.EventProtocol").extend(self)
+    require("framework.api.EventProtocol").extend(self)
 end
 
 function MapRuntime:preparePlay()
@@ -268,7 +268,7 @@ function MapRuntime:newDecoration(decorationName, target, x, y)
     if target then
         local targetView = target:getView()
         self.batch_:reorderChild(view, targetView:getZOrder() + decoration.zorder_)
-        local ox, oy = tonumber(x), tonumber(y)
+        local ox, oy = tonum(x), tonum(y)
         x, y = target:getPosition()
         x = math.floor(x)
         y = math.floor(y)

@@ -78,16 +78,16 @@ function PathEditorBehavior:bind(object)
         if #object.points_ < 1 then return end
 
         object.polygon_ = display.newPolygon(object.points_)
-        object.polygon_:setLineStipple(tonumber("0101010101010101", 2))
+        object.polygon_:setLineStipple(tonum("0101010101010101", 2))
         object.polygon_:setLineStippleEnabled(true)
         object.debugLayer_:addChild(object.polygon_, EditorConstants.POLYGON_ZORDER)
 
         if object.isSelected_ then
-            object.polygon_:setColor(unpack(PathEditorBehavior.SELECTED_COLOR))
+            object.polygon_:setLineColor(ccc4FFromccc4B(ccc4(unpack(PathEditorBehavior.SELECTED_COLOR))))
             object.idLabel_:setColor(ccc3(unpack(EditorConstants.SELECTED_LABEL_COLOR)))
             object.polygon_:setLineStippleEnabled(false)
         else
-            object.polygon_:setColor(unpack(PathEditorBehavior.UNSELECTED_COLOR))
+            object.polygon_:setLineColor(ccc4FFromccc4B(ccc4(unpack(PathEditorBehavior.UNSELECTED_COLOR))))
             object.idLabel_:setColor(ccc3(unpack(EditorConstants.UNSELECTED_LABEL_COLOR)))
             object.polygon_:setLineStippleEnabled(true)
         end
@@ -99,7 +99,7 @@ function PathEditorBehavior:bind(object)
             local x, y = unpack(point)
 
             if index == 1 then
-                object.idLabel_:setPosition(display.pixels(x, y - 10 - EditorConstants.LABEL_OFFSET_Y))
+                object.idLabel_:setPosition(x, y - 10 - EditorConstants.LABEL_OFFSET_Y)
                 object.idLabel_:setScale(scale)
                 object.x_, object.y_ = x, y
             end

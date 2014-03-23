@@ -30,7 +30,7 @@ function ObjectInspector:ctor(map)
     self.editButtons_    = {}
     self.isVisible_      = true
 
-    require("framework.client.api.EventProtocol").extend(self)
+    require("framework.api.EventProtocol").extend(self)
 end
 
 function ObjectInspector:checkPointIn(x, y)
@@ -113,7 +113,7 @@ function ObjectInspector:onTouch(event, x, y)
     local bsize = ObjectInspector.EditButtonSize / 2
     for i, button in pairs(self.editButtons_) do
         if x >= button.x - bsize and x <= button.x + bsize and y <= button.y + bsize and y >= button.y - bsize then
-            local message = format("Enter new [%s] value.\nNOTE: %s", button.name, tostring(button.editNote))
+            local message = string.format("Enter new [%s] value.\nNOTE: %s", button.name, tostring(button.editNote))
             local value = device.showInputBox("Change object property", message, tostring(button.value))
             if value ~= "" then
                 updateObject(function()
@@ -219,12 +219,12 @@ function ObjectInspector:setObject(object)
 
     lines[#lines + 1] = {
         name  = "radius",
-        value = format("%0.2f", object:getRadius()),
+        value = string.format("%0.2f", object:getRadius()),
     }
 
     lines[#lines + 1] = {
         name  = "flipSprite",
-        value = format("%s", tostring(object:isFlipSprite())),
+        value = string.format("%s", tostring(object:isFlipSprite())),
         edit  = true,
         editNote = "\"true, yes, 1\" = true, others = false",
         editFunction = function(object, newvalue)
@@ -241,7 +241,7 @@ function ObjectInspector:setObject(object)
     if object:hasBehavior("CollisionBehavior") then
         lines[#lines + 1] = {
             name  = "collisionEnabled",
-            value = format("%s", tostring(object:isCollisionEnabled())),
+            value = string.format("%s", tostring(object:isCollisionEnabled())),
             edit  = true,
             editNote = "\"true, yes, 1\" = true, others = false",
             editFunction = function(object, newvalue)
@@ -323,7 +323,7 @@ function ObjectInspector:setObject(object)
 
     lines[#lines + 1] = {
         name  = "x, y",
-        value = format("%0.2f, %0.2f", object:getPosition()),
+        value = string.format("%0.2f, %0.2f", object:getPosition()),
         edit  = true,
         editNote = "position format is x, y",
         editFunction = function(object, newvalue)
@@ -387,7 +387,7 @@ function ObjectInspector:setObject(object)
     local labelY = -14
     for i, pair in ipairs(lines) do
         local prefix = string.rep(" ", EditorConstants.PROPERTY_PREFIX_LEN - string.len(pair.name)) .. pair.name
-        local text   = format("%s = %s", tostring(prefix), tostring(pair.value))
+        local text   = string.format("%s = %s", tostring(prefix), tostring(pair.value))
         local label  = ui.newTTFLabel({
             text  = text,
             font  = EditorConstants.PANEL_LABEL_FONT,
@@ -445,7 +445,6 @@ function ObjectInspector:setObject(object)
             isLocked = false,
         }
         sprite:align(display.LEFT_TOP, label.x, label.y)
-        sprite:pixels()
 
         label.sprite = sprite
         self.behaviorsLabel_[i] = label

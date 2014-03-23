@@ -19,7 +19,7 @@ local BehaviorFactory = {}
 
 function BehaviorFactory.createBehavior(behaviorName)
     local class = behaviorsClass[behaviorName]
-    assert(class ~= nil, format("BehaviorFactory.createBehavior() - Invalid behavior name \"%s\"", tostring(behaviorName)))
+    assert(class ~= nil, string.format("BehaviorFactory.createBehavior() - Invalid behavior name \"%s\"", tostring(behaviorName)))
     return class.new()
 end
 

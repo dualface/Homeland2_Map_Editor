@@ -140,7 +140,7 @@ function FireBehavior:reset(object)
         end
     end
     object.fireRange_     = toint(object.state_.fireRange)
-    object.cooldown_      = tonumber(object.state_.cooldown)
+    object.cooldown_      = tonum(object.state_.cooldown)
     object.fireCooldown_  = 0
     object.fireEnabled_   = object.state_.fireEnabled
 
@@ -148,7 +148,7 @@ function FireBehavior:reset(object)
     object.maxDamage_     = toint(object.state_.maxDamage)
     object.hitrate_       = toint(object.state_.hitrate)
     object.critical_      = toint(object.state_.critical)
-    object.criticalPower_ = tonumber(object.state_.criticalPower)
+    object.criticalPower_ = tonum(object.state_.criticalPower)
 
     if type(object.fireEnabled_) ~= "boolean" then
         object.fireEnabled_ = true

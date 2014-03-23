@@ -26,11 +26,11 @@ function GeneralTool:ctor(toolbar, map)
             image         = "#ToggleBackgroundButton.png",
             imageSelected = "#ToggleBackgroundButtonSelected.png",
         },
-        {
-            name          = "PlayMap",
-            image         = "#PlayMapButton.png",
-            imageSelected = "#PlayMapButtonSelected.png",
-        },
+        -- {
+        --     name          = "PlayMap",
+        --     image         = "#PlayMapButton.png",
+        --     imageSelected = "#PlayMapButtonSelected.png",
+        -- },
     }
 
     self.drag_           = nil
@@ -60,9 +60,9 @@ function GeneralTool:selected(selectedButtonName)
         backgroundLayer:setOpacity(opacity)
         self.toolbar_:selectButton("GeneralTool", 1)
 
-    elseif selectedButtonName == "PlayMap" then
-        self.toolbar_:dispatchEvent({name = "PLAY_MAP"})
-        self.toolbar_:selectButton("GeneralTool", 1)
+    -- elseif selectedButtonName == "PlayMap" then
+    --     self.toolbar_:dispatchEvent({name = "PLAY_MAP"})
+    --     self.toolbar_:selectButton("GeneralTool", 1)
     end
 end
 

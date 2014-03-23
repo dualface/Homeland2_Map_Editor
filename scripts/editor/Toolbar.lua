@@ -1,11 +1,11 @@
 
-local AutoLayout = require("framework.client.ui.AutoLayout")
+local AutoLayout = require("editor.AutoLayout")
 local ToolBase   = require("editor.ToolBase")
 
 local Toolbar = class("Toolbar")
 
 function Toolbar:ctor(map)
-    require("framework.client.api.EventProtocol").extend(self)
+    require("framework.api.EventProtocol").extend(self)
 
     self.map_                = map
     self.tools_              = {}
@@ -20,7 +20,7 @@ function Toolbar:ctor(map)
 
     self.isDefaultTouch_     = false
 
-    require("framework.client.api.EventProtocol").extend(self)
+    require("framework.api.EventProtocol").extend(self)
 end
 
 function Toolbar:onTouch(event, x, y)
@@ -109,7 +109,7 @@ function Toolbar:createView(parent, bgImageName, padding)
                 if scale > 2.0 then scale = 2.0 end
                 self.map_:getCamera():setScale(scale)
                 self.map_:updateView()
-                self.scaleLabel_:setString(format("%0.2f", scale))
+                self.scaleLabel_:setString(string.format("%0.2f", scale))
             end
         end
     })
@@ -125,7 +125,7 @@ function Toolbar:createView(parent, bgImageName, padding)
                 if scale < 0.5 then scale = 0.5 end
                 self.map_:getCamera():setScale(scale)
                 self.map_:updateView()
-                self.scaleLabel_:setString(format("%0.2f", scale))
+                self.scaleLabel_:setString(string.format("%0.2f", scale))
             end
         end
     })

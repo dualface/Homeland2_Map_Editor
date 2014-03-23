@@ -33,7 +33,7 @@ function CannonBullet:hit()
     if not framesTime then framesTime = 0.8 end
 
     local frames    = display.newFrames(framesName, 1, framesLength)
-    local boom      = display.newSpriteWithFrame(frames[1])
+    local boom      = display.newSprite(frames[1])
     local animation = display.newAnimation(frames, framesTime / framesLength)
 
     local x, y = self.sprite_:getPosition()
