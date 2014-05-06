@@ -1,5 +1,5 @@
 
-local LEVEL_ID = "A0001"
+local LEVEL_ID = "A0002"
 
 local EditorConstants = require("editor.EditorConstants")
 
@@ -103,12 +103,12 @@ function EditorScene:ctor()
     self.playToolbar_:setVisible(false)
     self:addChild(self.playToolbar_)
 
-    if device.platform == "ios" or device.platform == "android" then
-        -- 如果是在真机上运行，就直接开始播放地图，不再使用编辑器
-        self:playMap()
-    else
+    -- if device.platform == "ios" or device.platform == "android" then
+    --     -- 如果是在真机上运行，就直接开始播放地图，不再使用编辑器
+    --     self:playMap()
+    -- else
         self:editMap()
-    end
+    -- end
 end
 
 -- 开始运行地图
@@ -118,14 +118,14 @@ function EditorScene:playMap()
     -- 隐藏编辑器界面
     self.toolbar_:getView():setVisible(false)
 
-    if device.platform == "ios" or device.platform == "android" then
-        -- 真机上禁止编辑器工具栏
-        self.playToolbar_:setVisible(false)
-    else
+    -- if device.platform == "ios" or device.platform == "android" then
+    --     -- 真机上禁止编辑器工具栏
+    --     self.playToolbar_:setVisible(false)
+    -- else
         -- 模拟器上保存地图当前状态
         self.mapState_ = self.map_:vardump()
         self.playToolbar_:setVisible(true)
-    end
+    -- end
     self.mapNameLabel_:setVisible(false)
 
     self.map_:getBackgroundLayer():setVisible(true)
