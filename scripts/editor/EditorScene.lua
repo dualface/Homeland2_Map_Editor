@@ -57,7 +57,11 @@ function EditorScene:ctor()
     self.toolbar_:selectButton("GeneralTool", 1)
 
     -- 创建对象信息面板
-    self.objectInspector_ = require("editor.ObjectInspector").new(self.map_, self.editorUIScale)
+    local objectInspectorScale = 1
+    -- if self.editorUIScale > 1 then
+    --     objectInspectorScale = 1.5
+    -- end
+    self.objectInspector_ = require("editor.ObjectInspector").new(self.map_, objectInspectorScale, self.toolbarLines)
     self.objectInspector_:addEventListener("UPDATE_OBJECT", function(event)
         self.toolbar_:dispatchEvent(event)
     end)
@@ -115,12 +119,7 @@ function EditorScene:ctor()
     if device.model == "iphone" then
     end
 
-    if device.platform == "ios" or device.platform == "android" then
-        -- 如果是在真机上运行，就直接开始播放地图，不再使用编辑器
-        self:playMap()
-    else
-        self:editMap()
-    end
+    self:editMap()
 end
 
 -- 开始运行地图

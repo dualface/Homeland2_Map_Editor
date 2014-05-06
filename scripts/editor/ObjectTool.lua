@@ -72,9 +72,9 @@ end
 
 function ObjectTool:setMoreButtonsEnabled(isEnabled)
     if isEnabled and self.currentObject_ and self.currentObject_:hasBehavior("MovableBehavior") then
-        self.buttons[4].sprite:setEnabled(true)
+        self.buttons[4].sprite:setButtonEnabled(true)
     else
-        self.buttons[4].sprite:setEnabled(false)
+        self.buttons[4].sprite:setButtonEnabled(false)
     end
 end
 

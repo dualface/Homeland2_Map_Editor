@@ -35,7 +35,7 @@ local object = {
     radius      = 60,
     offsetX     = -10,
     offsetY     = 35,
-    decorations = {"Building01Destroyed"},
+    decorations = {},
     campId      = MapConstants.ENEMY_CAMP,
 }
 defines["Building01"] = object

@@ -19,7 +19,7 @@ ObjectInspector.ALL_POSITIONS = {
     ObjectInspector.POSITION_LEFT_BOTTOM,
 }
 
-function ObjectInspector:ctor(map)
+function ObjectInspector:ctor(map, scale, toolbarLines)
     self.map_            = map
     self.sprite_         = nil
     self.bg_             = nil
@@ -29,6 +29,12 @@ function ObjectInspector:ctor(map)
     self.object_         = nil
     self.editButtons_    = {}
     self.isVisible_      = true
+    self.scale_          = scale
+    self.toolbarLines_   = toolbarLines
+
+    if device.platform == "ios" or device.platform == "android" then
+        self.position_ = ObjectInspector.POSITION_RIGHT_TOP
+    end
 
     require("framework.api.EventProtocol").extend(self)
 end
@@ -38,9 +44,9 @@ function ObjectInspector:checkPointIn(x, y)
     local wx, wy = worldPosition.x, worldPosition.y
 
     return x >= wx
-            and x <= wx + self.size_[1]
+            and x <= wx + self.size_[1] * self.scale_
             and y <= wy
-            and y >= wy - self.size_[2]
+            and y >= wy - self.size_[2] * self.scale_
 end
 
 function ObjectInspector:onTouch(event, x, y)
@@ -52,13 +58,15 @@ function ObjectInspector:onTouch(event, x, y)
     y = y - wy
 
     local width, height = unpack(self.size_)
-    local offset = EditorConstants.PANEL_BUTTON_OFFSET
-    local size = EditorConstants.PANEL_BUTTON_SIZE
+    width = width * self.scale_
+    height = height * self.scale_
+    local offset = EditorConstants.PANEL_BUTTON_OFFSET * self.scale_
+    local size = EditorConstants.PANEL_BUTTON_SIZE * self.scale_
     if x >= offset and x <= offset + size and y <= -offset and y >= -offset - size then
         self.sprite_:setVisible(false)
         self.isVisible_ = false
         return false
-    elseif x >= width - size - offset and x <= width - offset and y <= -offset and y >= -offset - size then
+    elseif device.platform ~= "ios" and device.platform ~= "android" and x >= width - size - offset and x <= width - offset and y <= -offset and y >= -offset - size then
         for i, pos in ipairs(ObjectInspector.ALL_POSITIONS) do
             if self.position_ == pos then
                 i = i + 1
@@ -88,13 +96,9 @@ function ObjectInspector:onTouch(event, x, y)
 
     for i, behavior in ipairs(BehaviorFactory.getAllStaticObjectBehaviorsName()) do
         local label = self.behaviorsLabel_[i]
-        if x >= label.x
-                and x <= label.x + label.width
-                and y <= label.y
-                and y >= label.y - label.height then
-
+        local lx, ly = label.x * self.scale_, label.y * self.scale_
+        if x >= lx and x <= lx + label.width * self.scale_ and y <= ly and y >= ly - label.height * self.scale_ then
             if label.isLocked then return false end
-
             updateObject(function()
                 if self.object_:hasBehavior(behavior) then
                     self.object_:unbindBehavior(behavior)
@@ -110,9 +114,10 @@ function ObjectInspector:onTouch(event, x, y)
         end
     end
 
-    local bsize = ObjectInspector.EditButtonSize / 2
+    local bsize = ObjectInspector.EditButtonSize / 2 * self.scale_
     for i, button in pairs(self.editButtons_) do
-        if x >= button.x - bsize and x <= button.x + bsize and y <= button.y + bsize and y >= button.y - bsize then
+        local bx, by = button.x * self.scale_, button.y * self.scale_
+        if x >= bx - bsize and x <= bx + bsize and y <= by + bsize and y >= by - bsize then
             local message = string.format("Enter new [%s] value.\nNOTE: %s", button.name, tostring(button.editNote))
             local value = device.showInputBox("Change object property", message, tostring(button.value))
             if value ~= "" then
@@ -136,6 +141,7 @@ function ObjectInspector:createView(parent, object)
     bg:getTexture():setAliasTexParameters()
     layer:addChild(bg)
     layer:setVisible(false)
+    layer:setScale(self.scale_)
     parent:addChild(layer)
 
     local closeButton = display.newSprite("#EditorPanelCloseButton.png")
@@ -146,6 +152,10 @@ function ObjectInspector:createView(parent, object)
     self.positionButton_ = display.newSprite("#EditorPanelPositionButton.png")
     self.positionButton_:setPosition(0, -offset)
     layer:addChild(self.positionButton_)
+
+    if device.platform == "ios" or device.platform == "android" then
+        self.positionButton_:setVisible(false)
+    end
 
     self.bg_ = bg
     self.sprite_ = layer
@@ -166,7 +176,10 @@ function ObjectInspector:setPosition()
     self.bg_:setScaleX(width / size.width)
     self.bg_:setScaleY(height / size.height)
 
-    local offset = EditorConstants.PANEL_OFFSET
+    width = width * self.scale_
+    height = height * self.scale_
+
+    local offset = EditorConstants.PANEL_OFFSET * self.scale_
 
     if self.position_ == ObjectInspector.POSITION_LEFT_TOP then
         self.sprite_:align(display.LEFT_TOP,
@@ -177,17 +190,21 @@ function ObjectInspector:setPosition()
                            display.c_right - width - offset,
                            display.c_top - offset)
     elseif self.position_ == ObjectInspector.POSITION_LEFT_BOTTOM then
-        self.sprite_:align(display.LEFT_TOP,
-                           display.c_left + offset,
-                           display.c_bottom + height + EditorConstants.MAP_TOOLBAR_HEIGHT + offset)
+        local y = display.c_bottom + height + offset
+        if self.scale_ == 1 then
+            y = y + EditorConstants.MAP_TOOLBAR_HEIGHT * self.toolbarLines_
+        end
+        self.sprite_:align(display.LEFT_TOP, display.c_left + offset, y)
     else
-        self.sprite_:align(display.LEFT_TOP,
-                           display.c_right - width - offset,
-                           display.c_bottom + height + EditorConstants.MAP_TOOLBAR_HEIGHT + offset)
+        local y = display.c_bottom + height + offset
+        if self.scale_ == 1 then
+            y = y + EditorConstants.MAP_TOOLBAR_HEIGHT * self.toolbarLines_
+        end
+        self.sprite_:align(display.LEFT_TOP, display.c_right - width - offset, y)
     end
 
     local offset = EditorConstants.PANEL_BUTTON_SIZE / 2 + EditorConstants.PANEL_BUTTON_OFFSET
-    self.positionButton_:setPositionX(width - offset)
+    self.positionButton_:setPositionX(width / self.scale_ - offset)
 end
 
 function ObjectInspector:setObject(object)
@@ -398,7 +415,7 @@ function ObjectInspector:setObject(object)
         })
         panel:addChild(label)
 
-        if pair.edit then
+        if pair.edit and device.platform ~= "ios" and device.platform ~= "android" then
             local editButton = display.newSprite("#EditButton.png", labelX - 10, labelY)
             panel:addChild(editButton)
             pair.x, pair.y = labelX - 10, labelY
@@ -434,7 +451,7 @@ function ObjectInspector:setObject(object)
             size = 10,
             align = ui.TEXT_ALIGN_LEFT,
             x = 20,
-            y = 16,
+            y = 12,
         })
         sprite:addChild(text)
         local label = {

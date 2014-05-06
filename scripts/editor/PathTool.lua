@@ -57,8 +57,8 @@ function PathTool:unselected()
 end
 
 function PathTool:setMoreButtonsEnabled(isEnabled)
-    self.buttons[3].sprite:setEnabled(isEnabled)
-    self.buttons[4].sprite:setEnabled(isEnabled)
+    self.buttons[3].sprite:setButtonEnabled(isEnabled)
+    self.buttons[4].sprite:setButtonEnabled(isEnabled)
 end
 
 function PathTool:setCurrentPath(path, pointIndex)

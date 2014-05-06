@@ -47,18 +47,22 @@ end
 
 function Toolbar:onButtonTap(selectedTool, selectedButton)
     for toolName, tool in pairs(self.tools_) do
-        if tool ~= selectedTool then tool:unselected() end
+        if tool ~= selectedTool then
+            for i, buttonSprite in ipairs(tool.buttonsSprite) do
+                buttonSprite:setButtonSelected(false)
+            end
+        end
         for buttonIndex, button in ipairs(tool.buttons) do
             if button == selectedButton then
                 self.currentButtonIndex_ = buttonIndex
-            elseif button.sprite:isEnabled() then
-                button.sprite:unselected()
+            elseif button.sprite:isButtonEnabled() then
+                button.sprite:setButtonSelected(false)
             end
         end
     end
 
     self.currentToolName_ = selectedTool:getName()
-    selectedButton.sprite:selected()
+    selectedButton.sprite:setButtonSelected(true)
     selectedTool:selected(selectedButton.name)
 
     self:dispatchEvent({
@@ -79,6 +83,7 @@ function Toolbar:createView(parent, bgImageName, padding, scale, toolbarLines)
     self.toolbarHeight_ = bg:getContentSize().height * scale
     self.sprite_:addChild(bg)
 
+    local menu = display.newNode()
     local items = {}
     for toolIndex, toolName in ipairs(self.toolsName_) do
         if toolbarLines > 1 and toolIndex == 3 then
@@ -88,15 +93,20 @@ function Toolbar:createView(parent, bgImageName, padding, scale, toolbarLines)
         end
 
         local tool = self.tools_[toolName]
+        tool.buttonsSprite = {}
         for buttonIndex, button in ipairs(tool.buttons) do
-            button.listener = function() self:onButtonTap(tool, button) end
-            button.sprite = ui.newImageMenuItem(button)
+            button.sprite = cc.ui.UICheckBoxButton.new({
+                off = button.image,
+                on = button.imageSelected,
+            })
+            button.sprite:onButtonClicked(function() self:onButtonTap(tool, button) end)
             button.sprite:setScale(scale)
+            menu:addChild(button.sprite)
+            tool.buttonsSprite[#tool.buttonsSprite + 1] = button.sprite
             items[#items + 1] = button.sprite
         end
     end
 
-    local menu = ui.newMenu(items)
     self.sprite_:addChild(menu)
     AutoLayout.alignItemsHorizontally(items, padding * scale, self.toolbarHeight_ / 2, padding * scale, toolbarLines)
 

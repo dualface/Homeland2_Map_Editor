@@ -33,6 +33,10 @@ function GeneralTool:ctor(toolbar, map)
         },
     }
 
+    if device.platform == "ios" or device.platform == "android" then
+        table.remove(self.buttons, 2)
+    end
+
     self.drag_           = nil
     self.debugIsVisible_ = true
 end

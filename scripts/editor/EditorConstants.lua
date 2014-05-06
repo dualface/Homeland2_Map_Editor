@@ -25,7 +25,7 @@ EditorConstants.BEHAVIOR_LABEL_WIDTH   = 110
 
 EditorConstants.INSPECTOR_WIDTH        = 360
 
-EditorConstants.PANEL_BUTTON_SIZE      = 20
+EditorConstants.PANEL_BUTTON_SIZE      = 40
 EditorConstants.PANEL_BUTTON_OFFSET    = 4
 EditorConstants.PANEL_OFFSET           = 4
 EditorConstants.PANEL_LABEL_FONT       = "Courier"
