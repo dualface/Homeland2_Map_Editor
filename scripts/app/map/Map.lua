@@ -25,6 +25,7 @@ local Map = class("Map")
 function Map:ctor(id, debug)
     self.id_               = id
     self.debug_            = debug
+    self.debugViewEnabled_ = debug
     self.ready_            = false
     self.mapModuleName_    = string.format("maps.Map%sData", id)
     self.eventModuleName_  = string.format("maps.Map%sEvents", id)
@@ -130,6 +131,30 @@ end
 
 --[[--
 
+确认是否允许使用调试视图
+
+]]
+function Map:isDebugViewEnabled()
+    return self.debugViewEnabled_
+end
+
+--[[--
+
+设置地图调试模式
+
+]]
+function Map:setDebugViewEnabled(isDebugViewEnabled)
+    self.debugViewEnabled_ = isDebugViewEnabled
+    for id, object in pairs(self.objects_) do
+        object:setDebugViewEnabled(isDebugViewEnabled)
+    end
+    if self:getDebugLayer() then
+        self:getDebugLayer():setVisible(isDebugViewEnabled)
+    end
+end
+
+--[[--
+
 确认地图是否已经创建了视图
 
 ]]
@@ -149,6 +174,8 @@ function Map:newObject(classId, state, id)
     end
 
     local object = ObjectFactory.newObject(classId, id, state, self)
+    object:setDebug(self.debug_)
+    object:setDebugViewEnabled(self.debugViewEnabled_)
     object:resetAllBehaviors()
 
     -- validate max object index
@@ -172,6 +199,7 @@ function Map:newObject(classId, state, id)
             self:removeObject(object)
             return nil
         end
+
         -- create view
         if self:isViewCreated() then
             object:createView(self.batch_, self.marksLayer_, self.debugLayer_)

@@ -270,9 +270,19 @@ function MapRuntime:newObject(classId, state, id)
     return object
 end
 
-function MapRuntime:removeObject(object)
-    object:removeView()
-    self.map_:removeObject(object)
+--[[--
+
+删除对象及其视图
+
+]]
+function MapRuntime:removeObject(object, delay)
+    if delay then
+        object:getView():performWithDelay(function()
+            self.map_:removeObject(object)
+        end, delay)
+    else
+        self.map_:removeObject(object)
+    end
 end
 
 --[[--

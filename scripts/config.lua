@@ -9,7 +9,7 @@ CONFIG_SCREEN_HEIGHT      = 640
 CONFIG_SCREEN_AUTOSCALE   = "FIXED_HEIGHT"
 
 CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(screenWidthInPixels, screenHeightInPixels, deviceModel)
-    if device.platform == "ios" or device.platform == "android" then
+    if (device.platform == "ios" and device.model == "iphone") or device.platform == "android" then
         return nil, nil
     end
 
@@ -17,6 +17,3 @@ CONFIG_SCREEN_AUTOSCALE_CALLBACK = function(screenWidthInPixels, screenHeightInP
     CONFIG_SCREEN_HEIGHT = screenHeightInPixels
     return 1, 1
 end
-
-TEXTURE_FORMAT = {}
-TEXTURE_FORMAT["MapA0001Bg.png"]    = kCCTexture2DPixelFormat_RGB565

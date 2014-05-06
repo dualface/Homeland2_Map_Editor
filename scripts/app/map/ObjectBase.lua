@@ -36,6 +36,8 @@ function ObjectBase:ctor(id, state, map)
     self.play_       = false
     self.tag_        = 0
     self.sprite_     = nil
+    self.debug_      = false
+    self.debugViewEnabled_ = false
     if type(self.viewZOrdered_) ~= "boolean" then
         self.viewZOrdered_ = true
     end
@@ -55,6 +57,22 @@ function ObjectBase:init()
         behaviorName = string.trim(behaviorName)
         if behaviorName ~= "" then self:bindBehavior(behaviorName) end
     end
+end
+
+function ObjectBase:isDebug()
+    return self.debug_
+end
+
+function ObjectBase:setDebug(isDebugEnabled)
+    self.debug_ = isDebugEnabled
+end
+
+function ObjectBase:isDebugViewEnabled()
+    return self.debugViewEnabled_
+end
+
+function ObjectBase:setDebugViewEnabled(isDebugViewEnabled)
+    self.debugViewEnabled_ = isDebugViewEnabled
 end
 
 function ObjectBase:getId()

@@ -68,39 +68,42 @@ function Toolbar:onButtonTap(selectedTool, selectedButton)
     })
 end
 
-function Toolbar:createView(parent, bgImageName, padding)
+function Toolbar:createView(parent, bgImageName, padding, scale, toolbarLines)
     if self.sprite_ then return end
 
     self.sprite_ = display.newNode()
     local bg = display.newSprite(bgImageName)
     bg:setScaleX((display.width / bg:getContentSize().width) * 2)
+    bg:setScaleY(scale * toolbarLines)
     bg:align(display.CENTER_BOTTOM, display.cx, 0)
-    self.toolbarHeight_ = bg:getContentSize().height
+    self.toolbarHeight_ = bg:getContentSize().height * scale
     self.sprite_:addChild(bg)
 
     local items = {}
     for toolIndex, toolName in ipairs(self.toolsName_) do
-        if toolIndex > 1 then items[#items + 1] = "-" end
+        if toolbarLines > 1 and toolIndex == 3 then
+            items[#items + 1] = "#"
+        elseif toolIndex > 1 then
+            items[#items + 1] = "-"
+        end
 
         local tool = self.tools_[toolName]
         for buttonIndex, button in ipairs(tool.buttons) do
             button.listener = function() self:onButtonTap(tool, button) end
             button.sprite = ui.newImageMenuItem(button)
+            button.sprite:setScale(scale)
             items[#items + 1] = button.sprite
         end
     end
 
     local menu = ui.newMenu(items)
     self.sprite_:addChild(menu)
-    AutoLayout.alignItemsHorizontally(items,
-                                      padding,
-                                      self.toolbarHeight_ / 2,
-                                      padding)
+    AutoLayout.alignItemsHorizontally(items, padding * scale, self.toolbarHeight_ / 2, padding * scale, toolbarLines)
 
     -- 放大缩小按钮
     local zoomInButton = ui.newImageMenuItem({
         image    = "#ZoomInButton.png",
-        x        = display.right - 72,
+        x        = display.right - 72 * scale,
         y        = self.toolbarHeight_ / 2,
         listener = function()
             local scale = self.map_:getCamera():getScale()
@@ -113,10 +116,11 @@ function Toolbar:createView(parent, bgImageName, padding)
             end
         end
     })
+    zoomInButton:setScale(scale)
 
     local zoomOutButton = ui.newImageMenuItem({
         image    = "#ZoomOutButton.png",
-        x        = display.right - 28,
+        x        = display.right - 28 * scale,
         y        = self.toolbarHeight_ / 2,
         listener = function()
             local scale = self.map_:getCamera():getScale()
@@ -129,6 +133,7 @@ function Toolbar:createView(parent, bgImageName, padding)
             end
         end
     })
+    zoomOutButton:setScale(scale)
 
     local zoombar = ui.newMenu({zoomInButton, zoomOutButton})
     self.sprite_:addChild(zoombar)
@@ -136,10 +141,10 @@ function Toolbar:createView(parent, bgImageName, padding)
     self.scaleLabel_ = ui.newTTFLabel({
         text  = "1.00",
         font  = ui.DEFAULT_TTF_FONT,
-        size  = 24,
+        size  = 24 * scale,
         color = ccc3(255, 255, 255),
         align = ui.TEXT_ALIGN_RIGHT,
-        x     = display.right - 96,
+        x     = display.right - 96 * scale,
         y     = self.toolbarHeight_ / 2,
     })
     self.sprite_:addChild(self.scaleLabel_)

@@ -141,6 +141,8 @@ function MapEventHandler:showShipExplode(object)
     local decoration = runtime:newDecoration("ShipExplode", object)
     decoration:setDelay(decoration.delay_)
     decoration:playAnimationOnceAndRemove()
+
+    self.runtime_:removeObject(object, decoration.delay_)
 end
 
 return MapEventHandler

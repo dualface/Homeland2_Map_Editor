@@ -50,8 +50,8 @@ objects["path:2"] = object
 local object = {
     radius = 32,
     tag = 0,
-    x = 1473,
-    y = 1004,
+    x = 1490,
+    y = 1100,
 }
 objects["range:28"] = object
 
@@ -60,8 +60,8 @@ objects["range:28"] = object
 local object = {
     radius = 38,
     tag = 0,
-    x = 544,
-    y = 999,
+    x = 542,
+    y = 1111,
 }
 objects["range:30"] = object
 
@@ -367,39 +367,6 @@ objects["static:21"] = object
 ----
 
 local object = {
-    defineId = "IncreaseHp",
-    flipSprite = false,
-    tag = 0,
-    x = 552,
-    y = 967,
-}
-objects["static:22"] = object
-
-----
-
-local object = {
-    defineId = "IncreaseHp",
-    flipSprite = false,
-    tag = 0,
-    x = 1006,
-    y = 966,
-}
-objects["static:23"] = object
-
-----
-
-local object = {
-    defineId = "IncreaseHp",
-    flipSprite = false,
-    tag = 0,
-    x = 1457,
-    y = 965,
-}
-objects["static:24"] = object
-
-----
-
-local object = {
     defineId = "Building01",
     flipSprite = false,
     tag = 0,
@@ -442,6 +409,17 @@ local object = {
     y = 466,
 }
 objects["static:3"] = object
+
+----
+
+local object = {
+    defineId = "IncreaseHp",
+    flipSprite = false,
+    tag = 0,
+    x = 1004,
+    y = 988,
+}
+objects["static:31"] = object
 
 ----
 

@@ -115,7 +115,7 @@ function StaticObjectEditorBehavior:bind(object)
             object.playerIdLabel_ = nil
         end
     end
-    object:bindMethod(self, "removeView", removeView, true)
+    object:bindMethod(self, "removeView", removeView)
 
     local function updateView(object)
         local x, y = math.floor(object.x_), math.floor(object.y_)
@@ -123,17 +123,18 @@ function StaticObjectEditorBehavior:bind(object)
         local scale = object.debugLayer_:getScale()
         if scale > 1 then scale = 1 / scale end
 
-        local idString = object:getId()
+        local idString = {object:getId(), "/"}
         if object:hasBehavior("NPCBehavior") then
-            idString = idString .. "/" .. object:getNPCId()
+            idString[#idString + 1] = object:getNPCId()
         elseif object:hasBehavior("TowerBehavior") then
-            idString = idString .. "/" .. object:getTowerId()
+            idString[#idString + 1] = object:getTowerId()
         elseif object:hasBehavior("BuildingBehavior") then
-            idString = idString .. "/" .. object:getBuildingId()
+            idString[#idString + 1] = object:getBuildingId()
         elseif object:hasBehavior("PlayerBehavior") then
-            idString = idString .. "/" .. object:getPlayerTestId()
+            idString[#idString + 1] = object:getPlayerTestId()
         end
 
+        idString = table.concat(idString)
         object.idLabel_:setString(idString)
         object.idLabel_:setPosition(x, y + object.idLabel_.offsetY + object.radiusOffsetY_)
         object.idLabel_:setScale(scale)
@@ -213,10 +214,12 @@ function StaticObjectEditorBehavior:bind(object)
     end
     object:bindMethod(self, "updateView", updateView)
 
-    -- local function fastUpdateView(object)
-    --     updateView(object)
-    -- end
-    -- object:bindMethod(self, "fastUpdateView", fastUpdateView)
+    local function fastUpdateView(object)
+        if object.debugViewEnabled_ then
+            updateView(object)
+        end
+    end
+    object:bindMethod(self, "fastUpdateView", fastUpdateView)
 end
 
 function StaticObjectEditorBehavior:unbind(object)

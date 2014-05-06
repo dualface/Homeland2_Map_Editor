@@ -17,7 +17,7 @@ EditorConstants.RANGE_HANDLER_ZORDER   = 4000
 EditorConstants.BINDING_LABEL_ZORDER   = 5000
 EditorConstants.PANEL_ZORDER           = 10000
 
-EditorConstants.MAP_PADDING            = 16
+EditorConstants.MAP_PADDING            = 200
 EditorConstants.MAP_TOOLBAR_HEIGHT     = 48
 
 EditorConstants.PROPERTY_PREFIX_LEN    = 16
@@ -30,5 +30,7 @@ EditorConstants.PANEL_BUTTON_OFFSET    = 4
 EditorConstants.PANEL_OFFSET           = 4
 EditorConstants.PANEL_LABEL_FONT       = "Courier"
 EditorConstants.PANEL_LABEL_FONT_SIZE  = 13
+
+EditorConstants.TOOLBAR_PADDING        = 40
 
 return EditorConstants
