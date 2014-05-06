@@ -213,10 +213,10 @@ function StaticObjectEditorBehavior:bind(object)
     end
     object:bindMethod(self, "updateView", updateView)
 
-    local function fastUpdateView(object)
-        updateView(object)
-    end
-    object:bindMethod(self, "fastUpdateView", fastUpdateView)
+    -- local function fastUpdateView(object)
+    --     updateView(object)
+    -- end
+    -- object:bindMethod(self, "fastUpdateView", fastUpdateView)
 end
 
 function StaticObjectEditorBehavior:unbind(object)

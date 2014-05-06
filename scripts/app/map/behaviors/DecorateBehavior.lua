@@ -57,6 +57,17 @@ function DecorateBehavior:bind(object)
     end
     object:bindMethod(self, "updateView", updateView)
 
+    local function fastUpdateView_(source, x, y, objectZOrder, batch)
+        if not source then return end
+
+        for decorationName, decoration in pairs(source) do
+            local view = decoration:getView()
+            batch:reorderChild(view, objectZOrder + decoration.zorder_)
+            view:setPosition(x + decoration.offsetX_, y + decoration.offsetY_)
+            view:setFlipX(flip)
+        end
+    end
+
     local function fastUpdateView(object)
         if not object.updated__ then return end
 
@@ -65,18 +76,8 @@ function DecorateBehavior:bind(object)
         local x, y         = object.x_, object.y_
         local flip         = object.flipSprite_
 
-        local function fastUpdateView_(source)
-            if not source then return end
-
-            for decorationName, decoration in pairs(source) do
-                local view = decoration:getView()
-                batch:reorderChild(view, objectZOrder + decoration.zorder_)
-                view:setPosition(x + decoration.offsetX_, y + decoration.offsetY_)
-                view:setFlipX(flip)
-            end
-        end
-        fastUpdateView_(object.decorations_)
-        fastUpdateView_(object.decorationsMore_)
+        fastUpdateView_(object.decorations_, x, y, objectZOrder, batch, flip)
+        fastUpdateView_(object.decorationsMore_, x, y, objectZOrder, batch, flip)
     end
     object:bindMethod(self, "fastUpdateView", fastUpdateView)
 
