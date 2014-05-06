@@ -40,6 +40,15 @@ objects["path:2"] = object
 ----
 
 local object = {
+    points = {
+        { 394,  531}, { 527,  447},
+     }
+}
+objects["path:22"] = object
+
+----
+
+local object = {
     radius = 51,
     tag = 0,
     x = 1375,

@@ -2,21 +2,21 @@
 local MapEvent     = require("app.map.MapEvent")
 local MapConstants = require("app.map.MapConstants")
 local Decoration   = require("app.map.Decoration")
+local ObjectBase   = require("app.map.ObjectBase")
 local math2d       = require("math2d")
 
 local MapRuntime = class("MapRuntime", function()
-    return CCNodeExtend.extend(CCPhysicsWorld:create(0, 0))
+    return display.newNode()
 end)
 
-local kMapEventCollisionBegan    = 1
-local kMapEventCollisionEnded    = 2
-local kMapEventCollisionFire     = 3
-local kMapEventCollisionNoTarget = 4
+local MAP_EVENT_COLLISION_BEGAN = 1
+local MAP_EVENT_COLLISION_ENDED = 2
+local MAP_EVENT_FIRE            = 3
+local MAP_EVENT_NO_FIRE_TARGET  = 4
 
--- copy global to local
-local kMapObjectClassIndexPath       = kMapObjectClassIndexPath
-local kMapObjectClassIndexRange      = kMapObjectClassIndexRange
-local kMapObjectClassIndexStatic     = kMapObjectClassIndexStatic
+local CLASS_INDEX_PATH   = ObjectBase.CLASS_INDEX_PATH
+local CLASS_INDEX_RANGE  = ObjectBase.CLASS_INDEX_RANGE
+local CLASS_INDEX_STATIC = ObjectBase.CLASS_INDEX_STATIC
 
 function MapRuntime:ctor(map)
     self.debug_                = map:isDebug()
@@ -39,6 +39,7 @@ function MapRuntime:ctor(map)
     self.decreaseCooldownRate_ = 1 -- 减少上帝技能冷却时间百分比
     self.skillCoolDown_        = {0, 0, 0, 0, 0}
     self.skillNeedTime_        = {0, 0, 0, 0, 0}
+    self.colls_                = {} -- 用于跟踪碰撞状态
 
     local eventHandlerModuleName = string.format("maps.Map%sEvents", map:getId())
     local eventHandlerModule = require(eventHandlerModuleName)
@@ -47,12 +48,12 @@ function MapRuntime:ctor(map)
     require("framework.api.EventProtocol").extend(self)
 
     -- 创建物理调试视图
-    self.debugView_ = self:createDebugNode()
-    self.debugView_:setVisible(false)
-    self:addChild(self.debugView_)
+    -- self.debugView_ = self:createDebugNode()
+    -- self.debugView_:setVisible(false)
+    -- self:addChild(self.debugView_)
 
     -- 启用节点事件，确保 onExit 时停止
-    self:setNodeEventEnabled(true)
+    -- self:setNodeEventEnabled(true)
 end
 
 function MapRuntime:onExit()
@@ -81,7 +82,7 @@ end
 
 ]]
 function MapRuntime:startPlay()
-    self.debugView_:setVisible(true)
+    -- self.debugView_:setVisible(true)
 
     self.starting_    = true
     self.over_        = false
@@ -92,7 +93,7 @@ function MapRuntime:startPlay()
         object:startPlay()
         object.updated__ = true
 
-        if object.classIndex_ == kMapObjectClassIndexStatic and object:hasBehavior("TowerBehavior") then
+        if object.classIndex_ == CLASS_INDEX_STATIC and object:hasBehavior("TowerBehavior") then
             self.towers_[id] = {
                 object.x_ + object.radiusOffsetX_,
                 object.y_ + object.radiusOffsetY_,
@@ -104,7 +105,7 @@ function MapRuntime:startPlay()
     self.handler_:startPlay(state)
     self:dispatchEvent({name = MapEvent.MAP_START_PLAY})
 
-    self:start() -- start physics world
+    -- self:start() -- start physics world
 end
 
 --[[--
@@ -113,8 +114,8 @@ end
 
 ]]
 function MapRuntime:stopPlay()
-    self.debugView_:setVisible(false)
-    self:stop() -- stop physics world
+    -- self.debugView_:setVisible(false)
+    -- self:stop() -- stop physics world
 
     for id, object in pairs(self.map_:getAllObjects()) do
         object:stopPlay()
@@ -183,16 +184,16 @@ function MapRuntime:tick(dt)
     end
 
     -- 通过碰撞引擎获得事件
-    local events
-    if not self.over_ then
+    local events = self:tickCollider(self.map_.objects_, self.colls_, dt)
+    if self.over_ then
         events = {}
     end
 
     if events and #events > 0 then
         for i, t in ipairs(events) do
             local event, object1, object2 = t[1], t[2], t[3]
-            if event == kMapEventCollisionBegan then
-                if object2.classIndex_ == kMapObjectClassIndexRange then
+            if event == MAP_EVENT_COLLISION_BEGAN then
+                if object2.classIndex_ == CLASS_INDEX_RANGE then
                     handler:objectEnterRange(object1, object2)
                     self:dispatchEvent({name = MapEvent.OBJECT_ENTER_RANGE, object = object1, range = object2})
                 else
@@ -203,8 +204,8 @@ function MapRuntime:tick(dt)
                         object2 = object2,
                     })
                 end
-            elseif event == kMapEventCollisionEnded then
-                if object2.classIndex_ == kMapObjectClassIndexRange then
+            elseif event == MAP_EVENT_COLLISION_ENDED then
+                if object2.classIndex_ == CLASS_INDEX_RANGE then
                     handler:objectExitRange(object1, object2)
                     self:dispatchEvent({name = MapEvent.OBJECT_EXIT_RANGE, object = object1, range = object2})
                 else
@@ -215,9 +216,9 @@ function MapRuntime:tick(dt)
                         object2 = object2,
                     })
                 end
-            elseif event == kMapEventCollisionFire then
+            elseif event == MAP_EVENT_FIRE then
                 handler:fire(object1, object2)
-            elseif event == kMapEventCollisionNoTarget then
+            elseif event == MAP_EVENT_NO_FIRE_TARGET then
                 handler:noTarget(object1)
             end
         end
@@ -331,6 +332,108 @@ function MapRuntime:resumePlay()
         self:dispatchEvent({name = MapEvent.MAP_RESUME_PLAY})
     end
     self.paused_ = false
+end
+
+local function checkStiaticObjectCollisionEnabled(obj)
+    return obj.classIndex_ == CLASS_INDEX_STATIC
+        and (not obj.destroyed_)
+        and obj.collisionEnabled_
+        and obj.collisionLock_ <= 0
+end
+
+function MapRuntime:tickCollider(objects, colls, dt)
+    local dists = {}
+    local sqrt = math.sqrt
+
+    -- 遍历所有对象，计算静态对象与其他静态对象或 Range 对象之间的距离
+    for id1, obj1 in pairs(objects) do
+        while true do
+            if not checkStiaticObjectCollisionEnabled(obj1) then
+                break
+            end
+
+            local x1, y1 = obj1.x_ + tonum(obj1.radiusOffsetX_), obj1.y_ + tonum(obj1.radiusOffsetY_)
+            local campId1 = toint(obj1.campId_)
+            dists[obj1] = {}
+
+            for id2, obj2 in pairs(objects) do
+                while true do
+                    if obj1 == obj2 then break end
+
+                    local ci = obj2.classIndex_
+                    if ci ~= CLASS_INDEX_STATIC and ci ~= CLASS_INDEX_RANGE then break end
+                    if ci == CLASS_INDEX_STATIC and not checkStiaticObjectCollisionEnabled(obj2) then break end
+                    if campId1 ~= 0 and campId1 == obj2.campId_ then break end
+
+                    local x2, y2 = obj2.x_ + tonum(obj2.radiusOffsetX_), obj2.y_ + tonum(obj2.radiusOffsetY_)
+                    local dx = x2 - x1
+                    local dy = y2 - y1
+                    local dist = sqrt(dx * dx + dy * dy)
+                    dists[obj1][obj2] = dist
+
+                    break -- stop while
+                end
+            end -- for id2, obj2 in pairs(objects) do
+
+            break -- stop while
+        end
+    end -- for id1, obj1 in pairs(objects) do
+
+    -- 检查碰撞和开火
+    local events = {}
+    for obj1, obj1targets in pairs(dists) do
+        local fireRange1 = tonum(obj1.fireRange_)
+        local radius1 = tonum(obj1.radius_)
+        local checkFire1 = obj1.fireEnabled_ and tonum(obj1.fireLock_) <= 0 and fireRange1 > 0 and tonum(obj1.fireCooldown_) <= 0
+
+        -- 从 obj1 的目标中查找距离最近的
+        local minTargetDist = 999999
+        local fireTarget = nil
+
+        -- 初始化碰撞目标数组
+        if not colls[obj1] then colls[obj1] = {} end
+        local obj1colls = colls[obj1]
+
+        -- 检查 obj1 和 obj2 的碰撞关系
+        for obj2, dist1to2 in pairs(obj1targets) do
+            local radius2 = obj2.radius_
+            local isCollision = dist1to2 - radius1 - radius2 <= 0
+
+            local event = 0
+            local obj2CollisionWithObj1 = obj1colls[obj2]
+            if isCollision and not obj2CollisionWithObj1 then
+                -- obj1 和 obj2 开始碰撞
+                event = MAP_EVENT_COLLISION_BEGAN
+                obj1colls[obj2] = true
+            elseif not isCollision and obj2CollisionWithObj1 then
+                -- obj1 和 obj2 结束碰撞
+                event = MAP_EVENT_COLLISION_ENDED
+                obj1colls[obj2] = nil
+            end
+
+            if event ~= 0 then
+                -- 记录事件
+                events[#events + 1] = {event, obj1, obj2}
+            end
+
+            -- 检查 obj1 是否可以对 obj2 开火
+            if checkFire1 and obj2.classIndex_ == CLASS_INDEX_STATIC then
+                local dist = dist1to2 - fireRange1 - radius2
+                if dist <= 0 and dist < minTargetDist then
+                    minTargetDist = dist
+                    fireTarget = obj2
+                end
+            end
+        end
+
+        if fireTarget then
+            events[#events + 1] = {MAP_EVENT_FIRE, obj1, fireTarget}
+        elseif checkFire1 then
+            events[#events + 1] = {MAP_EVENT_NO_FIRE_TARGET, obj1}
+        end
+    end
+
+    return events
 end
 
 return MapRuntime

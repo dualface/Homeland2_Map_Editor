@@ -3,10 +3,14 @@ local BehaviorFactory = require("app.map.behaviors.BehaviorFactory")
 
 local ObjectBase = class("ObjectBase")
 
+ObjectBase.CLASS_INDEX_PATH        = 1
+ObjectBase.CLASS_INDEX_RANGE       = 2
+ObjectBase.CLASS_INDEX_STATIC      = 3
+
 ObjectBase.CLASS_INDEX = {
-    path       = kMapObjectClassIndexPath,
-    range      = kMapObjectClassIndexRange,
-    static     = kMapObjectClassIndexStatic,
+    path       = ObjectBase.CLASS_INDEX_PATH,
+    range      = ObjectBase.CLASS_INDEX_RANGE,
+    static     = ObjectBase.CLASS_INDEX_STATIC,
 }
 
 function ObjectBase:ctor(id, state, map)
