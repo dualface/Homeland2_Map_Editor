@@ -207,6 +207,21 @@ end
 
 --[[--
 
+删除所有对象
+
+]]
+function Map:removeAllObjects()
+    for id, object in pairs(self.objects_) do
+        self:removeObject(object)
+    end
+    self.objects_           = {}
+    self.objectsByClass_    = {}
+    self.nextObjectIndex_   = 1
+    self.crossPointsOnPath_ = {}
+end
+
+--[[--
+
 检查指定的对象是否存在
 
 ]]
@@ -505,6 +520,20 @@ function Map:dumpToFile()
         echo("\n\n" .. contents .. "\n")
         return false
     end
+end
+
+--[[--
+
+重置地图状态
+
+]]
+function Map:reset(state)
+    self:removeAllObjects()
+    if self:isViewCreated() then self:removeView() end
+
+    self.data_ = clone(state)
+    self.ready_ = false
+    self:init()
 end
 
 return Map

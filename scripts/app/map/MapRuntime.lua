@@ -4,7 +4,9 @@ local MapConstants = require("app.map.MapConstants")
 local Decoration   = require("app.map.Decoration")
 local math2d       = require("math2d")
 
-local MapRuntime = class("MapRuntime")
+local MapRuntime = class("MapRuntime", function()
+    return CCNodeExtend.extend(CCPhysicsWorld:create(0, 0))
+end)
 
 local kMapEventCollisionBegan    = 1
 local kMapEventCollisionEnded    = 2
@@ -16,7 +18,7 @@ local kMapObjectClassIndexPath       = kMapObjectClassIndexPath
 local kMapObjectClassIndexRange      = kMapObjectClassIndexRange
 local kMapObjectClassIndexStatic     = kMapObjectClassIndexStatic
 
-function MapRuntime:ctor(map, runtimeC)
+function MapRuntime:ctor(map)
     self.debug_                = map:isDebug()
     self.map_                  = map
     self.batch_                = map:getBatchLayer()
@@ -29,7 +31,6 @@ function MapRuntime:ctor(map, runtimeC)
     self.lastSecond_           = 0 -- 用于触发 OBJECT_IN_RANGE 事件
     self.dispatchCloseHelp_    = 0
     self.towers_               = {} -- 所有的塔，在玩家触摸时显示开火范围
-    self.runtimeC_             = runtimeC -- 碰撞检测引擎
     self.bullets_              = {} -- 所有的子弹对象
     self.skills_               = {} -- 所有的上帝技能对象
     self.racePersonnel_        = {}
@@ -38,13 +39,24 @@ function MapRuntime:ctor(map, runtimeC)
     self.decreaseCooldownRate_ = 1 -- 减少上帝技能冷却时间百分比
     self.skillCoolDown_        = {0, 0, 0, 0, 0}
     self.skillNeedTime_        = {0, 0, 0, 0, 0}
-    self.colls_                = {} -- 用于 MapRuntimeC
 
     local eventHandlerModuleName = string.format("maps.Map%sEvents", map:getId())
     local eventHandlerModule = require(eventHandlerModuleName)
     self.handler_ = eventHandlerModule.new(self, map)
 
     require("framework.api.EventProtocol").extend(self)
+
+    -- 创建物理调试视图
+    self.debugView_ = self:createDebugNode()
+    self.debugView_:setVisible(false)
+    self:addChild(self.debugView_)
+
+    -- 启用节点事件，确保 onExit 时停止
+    self:setNodeEventEnabled(true)
+end
+
+function MapRuntime:onExit()
+    self:stopPlay()
 end
 
 function MapRuntime:preparePlay()
@@ -69,6 +81,8 @@ end
 
 ]]
 function MapRuntime:startPlay()
+    self.debugView_:setVisible(true)
+
     self.starting_    = true
     self.over_        = false
     self.paused_      = false
@@ -89,6 +103,8 @@ function MapRuntime:startPlay()
 
     self.handler_:startPlay(state)
     self:dispatchEvent({name = MapEvent.MAP_START_PLAY})
+
+    self:start() -- start physics world
 end
 
 --[[--
@@ -97,6 +113,9 @@ end
 
 ]]
 function MapRuntime:stopPlay()
+    self.debugView_:setVisible(false)
+    self:stop() -- stop physics world
+
     for id, object in pairs(self.map_:getAllObjects()) do
         object:stopPlay()
     end
@@ -166,7 +185,7 @@ function MapRuntime:tick(dt)
     -- 通过碰撞引擎获得事件
     local events
     if not self.over_ then
-        events = self.runtimeC_:tick(self.map_.objects_, self.colls_, dt)
+        events = {}
     end
 
     if events and #events > 0 then

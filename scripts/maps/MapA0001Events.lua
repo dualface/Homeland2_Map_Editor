@@ -6,8 +6,9 @@ local MyMapEventHandler = class("MyMapEventHandler", MapEventHandler)
 function MyMapEventHandler:preparePlay()
     MyMapEventHandler.super.preparePlay(self)
 
-    self.createNextEnemyDelay_    = 1.0 -- 等待多少时间创建下一个敌人
-    self.createNextEnemyInterval_ = 1.0 -- 创建下一个敌人前的间隔时间
+    self.createNextEnemyDelay_    = 0.1 -- 等待多少时间创建下一个敌人
+    self.createNextEnemyInterval_ = 3.0 -- 创建下一个敌人前的间隔时间
+    self.createNextEnemyOnPathIndex_ = 2 -- 下一个敌人在哪一条路径
 end
 
 function MyMapEventHandler:time(time, dt)
@@ -22,9 +23,14 @@ function MyMapEventHandler:time(time, dt)
             behaviors = "NPCBehavior",
         }
         local enemy = self.runtime_:newObject("static", state)
-        local pathId = string.format("path:%d", math.random(1, 2))
+        local pathId = string.format("path:%d", self.createNextEnemyOnPathIndex_)
         enemy:bindPath(self.map_:getObject(pathId), 1)
         enemy:startMoving()
+
+        self.createNextEnemyOnPathIndex_ = self.createNextEnemyOnPathIndex_ + 1
+        if self.createNextEnemyOnPathIndex_ > 2 then
+            self.createNextEnemyOnPathIndex_ = 1
+        end
     end
 end
 

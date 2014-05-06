@@ -17,65 +17,65 @@ function EditorScene:ctor()
     self:addChild(bg)
 
     -- mapLayer 包含地图的整个视图
-    self.mapLayer = display.newNode()
-    self.mapLayer:align(display.LEFT_BOTTOM, 0, 0)
-    self:addChild(self.mapLayer)
+    self.mapLayer_ = display.newNode()
+    self.mapLayer_:align(display.LEFT_BOTTOM, 0, 0)
+    self:addChild(self.mapLayer_)
 
     -- touchLayer 用于接收触摸事件
-    self.touchLayer = display.newLayer()
-    self:addChild(self.touchLayer)
+    self.touchLayer_ = display.newLayer()
+    self:addChild(self.touchLayer_)
 
     -- uiLayer 用于显示编辑器的 UI（工具栏等）
-    self.uiLayer = display.newNode()
-    self.uiLayer:setPosition(display.cx, display.cy)
-    self:addChild(self.uiLayer)
+    self.uiLayer_ = display.newNode()
+    self.uiLayer_:setPosition(display.cx, display.cy)
+    self:addChild(self.uiLayer_)
 
     -- 创建地图对象
-    self.map = require("app.map.Map").new(LEVEL_ID, true) -- 参数：地图ID, 是否是编辑器模式
-    self.map:init()
-    self.map:createView(self.mapLayer)
+    self.map_ = require("app.map.Map").new(LEVEL_ID, true) -- 参数：地图ID, 是否是编辑器模式
+    self.map_:init()
+    self.map_:createView(self.mapLayer_)
 
     -- 创建工具栏
-    self.toolbar = require("editor.Toolbar").new(self.map)
-    self.toolbar:addTool(require("editor.GeneralTool").new(self.toolbar, self.map))
-    self.toolbar:addTool(require("editor.ObjectTool").new(self.toolbar, self.map))
-    self.toolbar:addTool(require("editor.PathTool").new(self.toolbar, self.map))
-    self.toolbar:addTool(require("editor.RangeTool").new(self.toolbar, self.map))
+    self.toolbar_ = require("editor.Toolbar").new(self.map_)
+    self.toolbar_:addTool(require("editor.GeneralTool").new(self.toolbar_, self.map_))
+    self.toolbar_:addTool(require("editor.ObjectTool").new(self.toolbar_, self.map_))
+    self.toolbar_:addTool(require("editor.PathTool").new(self.toolbar_, self.map_))
+    self.toolbar_:addTool(require("editor.RangeTool").new(self.toolbar_, self.map_))
 
     -- 创建工具栏的视图
-    self.toolbarView = self.toolbar:createView(self.uiLayer, "#ToolbarBg.png", 40)
-    self.toolbarView:setPosition(display.c_left, display.c_bottom)
-    self.toolbar:setDefaultTouchTool("GeneralTool")
-    self.toolbar:selectButton("GeneralTool", 1)
+    self.toolbarView_ = self.toolbar_:createView(self.uiLayer_, "#ToolbarBg.png", 40)
+    self.toolbarView_:setPosition(display.c_left, display.c_bottom)
+    self.toolbar_:setDefaultTouchTool("GeneralTool")
+    self.toolbar_:selectButton("GeneralTool", 1)
 
     -- 创建对象信息面板
-    self.objectInspector = require("editor.ObjectInspector").new(self.map)
-    self.objectInspector:addEventListener("UPDATE_OBJECT", function(event)
-        self.toolbar:dispatchEvent(event)
+    self.objectInspector_ = require("editor.ObjectInspector").new(self.map_)
+    self.objectInspector_:addEventListener("UPDATE_OBJECT", function(event)
+        self.toolbar_:dispatchEvent(event)
     end)
-    self.objectInspector:createView(self.uiLayer)
+    self.objectInspector_:createView(self.uiLayer_)
 
     -- 创建地图名称文字标签
-    self.mapNameLabel = ui.newTTFLabelWithOutline({
-        text  = string.format("module: %s, image: %s", self.map.mapModuleName_, self.map.imageName_),
+    self.mapNameLabel_ = ui.newTTFLabelWithOutline({
+        text  = string.format("module: %s, image: %s", self.map_.mapModuleName_, self.map_.imageName_),
         size  = 16,
         align = ui.TEXT_ALIGN_LEFT,
         x     = display.left + 10,
         y     = display.bottom + EditorConstants.MAP_TOOLBAR_HEIGHT + 20,
     })
-    self.mapLayer:addChild(self.mapNameLabel)
+    self.mapLayer_:addChild(self.mapNameLabel_)
 
     -- 注册工具栏事件
-    self.toolbar:addEventListener("SELECT_OBJECT", function(event)
-        self.objectInspector:setObject(event.object)
+    self.toolbar_:addEventListener("SELECT_OBJECT", function(event)
+        self.objectInspector_:setObject(event.object)
     end)
-    self.toolbar:addEventListener("UPDATE_OBJECT", function(event)
-        self.objectInspector:setObject(event.object)
+    self.toolbar_:addEventListener("UPDATE_OBJECT", function(event)
+        self.objectInspector_:setObject(event.object)
     end)
-    self.toolbar:addEventListener("UNSELECT_OBJECT", function(event)
-        self.objectInspector:removeObject()
+    self.toolbar_:addEventListener("UNSELECT_OBJECT", function(event)
+        self.objectInspector_:removeObject()
     end)
-    self.toolbar:addEventListener("PLAY_MAP", function()
+    self.toolbar_:addEventListener("PLAY_MAP", function()
         self:playMap()
     end)
 
@@ -86,7 +86,7 @@ function EditorScene:ctor()
         x             = display.left + 26,
         y             = display.top - 26,
         listener      = function()
-            local debugLayer = self.map:getDebugLayer()
+            local debugLayer = self.map_:getDebugLayer()
             debugLayer:setVisible(not debugLayer:isVisible())
         end
     })
@@ -99,9 +99,9 @@ function EditorScene:ctor()
         listener      = function() self:editMap() end
     })
 
-    self.playToolbar = ui.newMenu({toggleDebugButton, stopMapButton})
-    self.playToolbar:setVisible(false)
-    self:addChild(self.playToolbar)
+    self.playToolbar_ = ui.newMenu({toggleDebugButton, stopMapButton})
+    self.playToolbar_:setVisible(false)
+    self:addChild(self.playToolbar_)
 
     if device.platform == "ios" or device.platform == "android" then
         -- 如果是在真机上运行，就直接开始播放地图，不再使用编辑器
@@ -116,56 +116,59 @@ function EditorScene:playMap()
     CCDirector:sharedDirector():setDisplayStats(true)
 
     -- 隐藏编辑器界面
-    self.toolbar:getView():setVisible(false)
+    self.toolbar_:getView():setVisible(false)
 
     if device.platform == "ios" or device.platform == "android" then
         -- 真机上禁止编辑器工具栏
-        self.playToolbar:setVisible(false)
+        self.playToolbar_:setVisible(false)
     else
-        self.playToolbar:setVisible(true)
+        -- 模拟器上保存地图当前状态
+        self.mapState_ = self.map_:vardump()
+        self.playToolbar_:setVisible(true)
     end
-    self.mapNameLabel:setVisible(false)
+    self.mapNameLabel_:setVisible(false)
 
-    self.map:getBackgroundLayer():setVisible(true)
-    self.map:getBackgroundLayer():setOpacity(255)
-    if self.map:getDebugLayer() then
-        self.map:getDebugLayer():setVisible(false)
+    self.map_:getBackgroundLayer():setVisible(true)
+    self.map_:getBackgroundLayer():setOpacity(255)
+    if self.map_:getDebugLayer() then
+        self.map_:getDebugLayer():setVisible(false)
     end
 
-    local camera = self.map:getCamera()
+    local camera = self.map_:getCamera()
     camera:setMargin(0, 0, 0, 0)
     camera:setOffset(0, 0)
 
-    self.mapRuntimeC = MapRuntimeC:create()
-    self:addChild(self.mapRuntimeC)
-
-    self.mapRuntime = require("app.map.MapRuntime").new(self.map, self.mapRuntimeC)
-    self.mapRuntime:preparePlay()
-    self.mapRuntime:startPlay()
+    self.mapRuntime_ = require("app.map.MapRuntime").new(self.map_)
+    self.mapRuntime_:preparePlay()
+    self.mapRuntime_:startPlay()
+    self:addChild(self.mapRuntime_)
 end
 
 -- 开始编辑地图
 function EditorScene:editMap()
     CCDirector:sharedDirector():setDisplayStats(false)
 
-    if self.mapRuntime then
-        self.mapRuntime:stopPlay()
-        self.mapRuntime = nil
+    if self.mapRuntime_ then
+        self.mapRuntime_:stopPlay()
+        self.mapRuntime_:removeSelf()
+        self.mapRuntime_ = nil
     end
 
-    if self.mapRuntimeC then
-        self.mapRuntimeC:removeFromParentAndCleanup(true)
-        self.mapRuntimeC = nil
+    if self.mapState_ then
+        -- 重置地图状态
+        self.map_:reset(self.mapState_)
+        self.map_:createView(self.mapLayer_)
+        self.mapState_ = nil
     end
 
-    self.toolbar:getView():setVisible(true)
-    self.playToolbar:setVisible(false)
-    self.mapNameLabel:setVisible(true)
-    if self.map:getDebugLayer() then
-        self.map:getDebugLayer():setVisible(true)
+    self.toolbar_:getView():setVisible(true)
+    self.playToolbar_:setVisible(false)
+    self.mapNameLabel_:setVisible(true)
+    if self.map_:getDebugLayer() then
+        self.map_:getDebugLayer():setVisible(true)
     end
 
-    local camera = self.map:getCamera()
+    local camera = self.map_:getCamera()
     camera:setMargin(EditorConstants.MAP_PADDING,
                      EditorConstants.MAP_PADDING,
                      EditorConstants.MAP_PADDING + EditorConstants.MAP_TOOLBAR_HEIGHT + 20,
@@ -175,15 +178,15 @@ function EditorScene:editMap()
 end
 
 function EditorScene:tick(dt)
-    if self.mapRuntime then
-        self.mapRuntime:tick(dt)
+    if self.mapRuntime_ then
+        self.mapRuntime_:tick(dt)
     end
 end
 
 function EditorScene:onTouch(event, x, y)
-    if self.mapRuntime then
+    if self.mapRuntime_ then
         -- 如果正在运行地图，将触摸事件传递到地图
-        if self.mapRuntime:onTouch(event, x, y, map) == true then
+        if self.mapRuntime_:onTouch(event, x, y, map) == true then
             return true
         end
 
@@ -204,7 +207,7 @@ function EditorScene:onTouch(event, x, y)
             self.drag.offsetY = y - self.drag.lastY
             self.drag.lastX = x
             self.drag.lastY = y
-            self.map:getCamera():moveOffset(self.drag.offsetX, self.drag.offsetY)
+            self.map_:getCamera():moveOffset(self.drag.offsetX, self.drag.offsetY)
 
         else -- "ended" or CCTOUCHCANCELLED
             self.drag = nil
@@ -216,27 +219,29 @@ function EditorScene:onTouch(event, x, y)
     -- 如果没有运行地图，则将事件传递到工具栏
     x, y = math.round(x), math.round(y)
     if event == "began" then
-        if self.objectInspector:getView():isVisible() and self.objectInspector:checkPointIn(x, y) then
-            return self.objectInspector:onTouch(event, x, y)
+        if self.objectInspector_:getView():isVisible() and self.objectInspector_:checkPointIn(x, y) then
+            return self.objectInspector_:onTouch(event, x, y)
         end
     end
 
-    return self.toolbar:onTouch(event, x, y)
+    return self.toolbar_:onTouch(event, x, y)
 end
 
 function EditorScene:onEnter()
-    self.touchLayer:registerScriptTouchHandler(function(event, x, y)
+    self.touchLayer_:registerScriptTouchHandler(function(event, x, y)
         return self:onTouch(event, x, y)
     end)
-    self.touchLayer:setTouchEnabled(true)
+    self.touchLayer_:setTouchEnabled(true)
     self:scheduleUpdate(function(dt) self:tick(dt) end)
 end
 
 function EditorScene:onExit()
-    if self.mapRuntime then self.mapRuntime:stopPlay() end
+    if self.mapRuntime_ then
+        self.mapRuntime_:stopPlay()
+    end
 
-    self.objectInspector:removeAllEventListeners()
-    self.toolbar:removeAllEventListeners()
+    self.objectInspector_:removeAllEventListeners()
+    self.toolbar_:removeAllEventListeners()
 end
 
 return EditorScene
