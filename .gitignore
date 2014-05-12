@@ -15,4 +15,5 @@ proj.android/obj/*
 proj.android/libs/*
 proj.android/bin/*
 proj.android/gen/*
+scripts/framework
 
