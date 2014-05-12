@@ -11,12 +11,12 @@ end
 
 function DecorateBehavior:bind(object)
     object.decorations_ = {}
-    for i,k in ipairs(totable(object.state_.decorations)) do
+    for i,k in ipairs(checktable(object.state_.decorations)) do
         object.decorations_[k] = false
     end
 
     object.decorationsMore_ = {}
-    for i,k in ipairs(totable(object.state_.decorationsMore)) do
+    for i,k in ipairs(checktable(object.state_.decorationsMore)) do
         object.decorationsMore_[k] = false
     end
 

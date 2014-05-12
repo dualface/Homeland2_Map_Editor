@@ -5,7 +5,7 @@ local ObjectBase = require("app.map.ObjectBase")
 local Path = class("Path", ObjectBase)
 
 function Path:ctor(id, state, map)
-    state.points = totable(state.points)
+    state.points = checktable(state.points)
 
     local x, y = 0, 0
     if #state.points > 0 then

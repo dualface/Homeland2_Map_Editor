@@ -26,11 +26,11 @@ function ObjectBase:ctor(id, state, map)
     self.id_         = id
     self.classId_    = classId
     self.classIndex_ = ObjectBase.CLASS_INDEX[classId]
-    self.index_      = toint(index)
-    self.x_          = toint(self.x_)
-    self.y_          = toint(self.y_)
-    self.offsetX_    = toint(self.offsetX_)
-    self.offsetY_    = toint(self.offsetY_)
+    self.index_      = checkint(index)
+    self.x_          = checkint(self.x_)
+    self.y_          = checkint(self.y_)
+    self.offsetX_    = checkint(self.offsetX_)
+    self.offsetY_    = checkint(self.offsetY_)
     self.state_      = state
     self.valid_      = false
     self.play_       = false

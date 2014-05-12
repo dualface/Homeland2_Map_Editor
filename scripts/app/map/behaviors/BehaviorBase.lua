@@ -3,9 +3,9 @@ local BehaviorBase = class("BehaviorBase")
 
 function BehaviorBase:ctor(behaviorName, depends, priority, conflictions)
     self.name_         = behaviorName
-    self.depends_      = totable(depends)
-    self.priority_     = toint(priority) -- 行为集合初始化时的优先级，越大越先初始化
-    self.conflictions_ = totable(conflictions)
+    self.depends_      = checktable(depends)
+    self.priority_     = checkint(priority) -- 行为集合初始化时的优先级，越大越先初始化
+    self.conflictions_ = checktable(conflictions)
 end
 
 function BehaviorBase:getName()

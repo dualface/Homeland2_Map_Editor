@@ -10,7 +10,7 @@ function Range:ctor(id, state, map)
     Range.super.ctor(self, id, state, map)
     self.valid_            = true
     self.collisionEnabled_ = true
-    self.radius_           = toint(self.radius_)
+    self.radius_           = checkint(self.radius_)
     if self.radius_ <= 0 then
         self.radius_ = Range.DEFAULT_RADIUS
     end

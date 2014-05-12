@@ -46,7 +46,7 @@ function StaticObjectEditorBehavior:bind(object)
 
         object.radiusCircle_ = display.newCircle(object.radius_)
         object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(EditorConstants.UNSELECTED_COLOR))))
-        object.radiusCircle_:setLineStipple(tonum("1111000011110000", 2))
+        object.radiusCircle_:setLineStipple(checknumber("1111000011110000", 2))
         object.radiusCircle_:setLineStippleEnabled(true)
         debugLayer:addChild(object.radiusCircle_, EditorConstants.CIRCLE_ZORDER)
 
@@ -56,7 +56,7 @@ function StaticObjectEditorBehavior:bind(object)
         if object:hasBehavior("FireBehavior") then
             object.fireRangeCircle_ = display.newCircle(object.fireRange_)
             -- object.fireRangeCircle_:setScaleY(MapConstants.RADIUS_CIRCLE_SCALE_Y)
-            object.fireRangeCircle_:setLineStipple(tonum("1111000011110000", 2))
+            object.fireRangeCircle_:setLineStipple(checknumber("1111000011110000", 2))
             object.fireRangeCircle_:setLineStippleEnabled(true)
             debugLayer:addChild(object.fireRangeCircle_)
         end

@@ -78,7 +78,7 @@ function PathEditorBehavior:bind(object)
         if #object.points_ < 1 then return end
 
         object.polygon_ = display.newPolygon(object.points_)
-        object.polygon_:setLineStipple(tonum("0101010101010101", 2))
+        object.polygon_:setLineStipple(checknumber("0101010101010101", 2))
         object.polygon_:setLineStippleEnabled(true)
         object.debugLayer_:addChild(object.polygon_, EditorConstants.POLYGON_ZORDER)
 

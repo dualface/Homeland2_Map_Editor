@@ -11,9 +11,9 @@ local CurvedBulletBase = class("CurvedBulletBase", BulletBase)
 
 function CurvedBulletBase:ctor(source, target, sprite, params)
     CurvedBulletBase.super.ctor(self, source, target, sprite, params.delay)
-    self.flyTime_    = tonum(params.flyTime)
-    self.g_          = tonum(params.g)
-    self.isRotation_ = tobool(params.isRotation)
+    self.flyTime_    = checknumber(params.flyTime)
+    self.g_          = checknumber(params.g)
+    self.isRotation_ = checkbool(params.isRotation)
 end
 
 function CurvedBulletBase:fireBegan()

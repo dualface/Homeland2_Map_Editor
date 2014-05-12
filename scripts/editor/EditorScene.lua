@@ -116,9 +116,6 @@ function EditorScene:ctor()
     self.playToolbar_:setVisible(false)
     self:addChild(self.playToolbar_)
 
-    if device.model == "iphone" then
-    end
-
     self:editMap()
 end
 
@@ -239,11 +236,12 @@ function EditorScene:onTouch(event, x, y)
 end
 
 function EditorScene:onEnter()
-    self.touchLayer_:registerScriptTouchHandler(function(event, x, y)
-        return self:onTouch(event, x, y)
+    self.touchLayer_:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        return self:onTouch(event.name, event.x, event.y)
     end)
     self.touchLayer_:setTouchEnabled(true)
-    self:scheduleUpdate(function(dt) self:tick(dt) end)
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, handler(self, self.tick))
+    self:scheduleUpdate()
 end
 
 function EditorScene:onExit()

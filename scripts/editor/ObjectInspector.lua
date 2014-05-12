@@ -20,6 +20,8 @@ ObjectInspector.ALL_POSITIONS = {
 }
 
 function ObjectInspector:ctor(map, scale, toolbarLines)
+    cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
+
     self.map_            = map
     self.sprite_         = nil
     self.bg_             = nil
@@ -35,8 +37,6 @@ function ObjectInspector:ctor(map, scale, toolbarLines)
     if device.platform == "ios" or device.platform == "android" then
         self.position_ = ObjectInspector.POSITION_RIGHT_TOP
     end
-
-    require("framework.api.EventProtocol").extend(self)
 end
 
 function ObjectInspector:checkPointIn(x, y)
@@ -346,8 +346,8 @@ function ObjectInspector:setObject(object)
         editFunction = function(object, newvalue)
             newvalue = string.split(newvalue, ",")
             if #newvalue == 2 then
-                local x = toint(string.trim(newvalue[1]))
-                local y = toint(string.trim(newvalue[2]))
+                local x = checkint(string.trim(newvalue[1]))
+                local y = checkint(string.trim(newvalue[2]))
                 object:setPosition(x, y)
             end
         end
@@ -360,7 +360,7 @@ function ObjectInspector:setObject(object)
             edit  = true,
             editNote = "campId is integer",
             editFunction = function(object, newvalue)
-                object.campId_ = toint(newvalue)
+                object.campId_ = checkint(newvalue)
             end
         }
     end

@@ -20,7 +20,7 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "getMaxHp", getMaxHp)
 
     local function setMaxHp(object, maxHp)
-        maxHp = toint(maxHp)
+        maxHp = checkint(maxHp)
         assert(maxHp > 0, string.format("DestroyedBehavior.setMaxHp() - invalid maxHp %s", tostring(maxHp)))
         object.maxHp_ = maxHp
     end
@@ -32,7 +32,7 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "getHp", getHp)
 
     local function setHp(object, hp)
-        hp = tonum(hp)
+        hp = checknumber(hp)
         assert(hp >= 0 and hp <= object.maxHp_,
                string.format("DestroyedBehavior.setHp() - invalid hp %s", tostring(hp)))
         object.hp_ = hp
@@ -42,7 +42,7 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "setHp", setHp)
 
     local function decreaseHp(object, amount)
-        amount = tonum(amount)
+        amount = checknumber(amount)
         assert(amount >= 0, string.format("DestroyedBehavior.decreaseHp() - invalid amount %s", tostring(amount)))
         object.hp_ = object.hp_ - amount
         if object.hp_ <= 0 then
@@ -53,7 +53,7 @@ function DestroyedBehavior:bind(object)
     object:bindMethod(self, "decreaseHp", decreaseHp)
 
     local function increaseHp(object, amount)
-        amount = tonum(amount)
+        amount = checknumber(amount)
         assert(amount >= 0, string.format("DestroyedBehavior.increaseHp() - invalid amount %s", tostring(amount)))
         object.hp_ = object.hp_ + amount
         if object.hp_ >= object.maxHp_ then
@@ -135,9 +135,9 @@ function DestroyedBehavior:unbind(object)
 end
 
 function DestroyedBehavior:reset(object)
-    object.hitOffsetX_ = toint(object.state_.hitOffsetX)
-    object.hitOffsetY_ = toint(object.state_.hitOffsetY)
-    object.maxHp_      = toint(object.state_.maxHp)
+    object.hitOffsetX_ = checkint(object.state_.hitOffsetX)
+    object.hitOffsetY_ = checkint(object.state_.hitOffsetY)
+    object.maxHp_      = checkint(object.state_.maxHp)
 
     if object.maxHp_ < 1 then object.maxHp_ = 1 end
     object.hp_        = object.maxHp_

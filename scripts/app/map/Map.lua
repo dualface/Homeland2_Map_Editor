@@ -330,9 +330,9 @@ function Map:createView(parent)
     self.bgSprite_ = display.newSprite(self.imageName_)
     CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888)
 
-    self.bgSprite_:registerScriptHandler(function(event)
+    self.bgSprite_:addNodeEventListener(cc.NODE_EVENT, function(event)
         -- 地图对象删除时，自动从缓存里卸载地图材质
-        if event == "exit" then
+        if event.name == "exit" then
             display.removeSpriteFrameByImageName(self.imageName_)
         end
     end)

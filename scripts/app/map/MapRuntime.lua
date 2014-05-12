@@ -19,6 +19,8 @@ local CLASS_INDEX_RANGE  = ObjectBase.CLASS_INDEX_RANGE
 local CLASS_INDEX_STATIC = ObjectBase.CLASS_INDEX_STATIC
 
 function MapRuntime:ctor(map)
+    cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
+
     self.debug_                = map:isDebug()
     self.map_                  = map
     self.batch_                = map:getBatchLayer()
@@ -44,8 +46,6 @@ function MapRuntime:ctor(map)
     local eventHandlerModuleName = string.format("maps.Map%sEvents", map:getId())
     local eventHandlerModule = require(eventHandlerModuleName)
     self.handler_ = eventHandlerModule.new(self, map)
-
-    require("framework.api.EventProtocol").extend(self)
 
     -- 创建物理调试视图
     -- self.debugView_ = self:createDebugNode()
@@ -298,7 +298,7 @@ function MapRuntime:newDecoration(decorationName, target, x, y)
     if target then
         local targetView = target:getView()
         self.batch_:reorderChild(view, targetView:getZOrder() + decoration.zorder_)
-        local ox, oy = tonum(x), tonum(y)
+        local ox, oy = checknumber(x), checknumber(y)
         x, y = target:getPosition()
         x = math.floor(x)
         y = math.floor(y)
@@ -362,8 +362,8 @@ function MapRuntime:tickCollider(objects, colls, dt)
                 break
             end
 
-            local x1, y1 = obj1.x_ + tonum(obj1.radiusOffsetX_), obj1.y_ + tonum(obj1.radiusOffsetY_)
-            local campId1 = toint(obj1.campId_)
+            local x1, y1 = obj1.x_ + checknumber(obj1.radiusOffsetX_), obj1.y_ + checknumber(obj1.radiusOffsetY_)
+            local campId1 = checkint(obj1.campId_)
             dists[obj1] = {}
 
             for id2, obj2 in pairs(objects) do
@@ -375,7 +375,7 @@ function MapRuntime:tickCollider(objects, colls, dt)
                     if ci == CLASS_INDEX_STATIC and not checkStiaticObjectCollisionEnabled(obj2) then break end
                     if campId1 ~= 0 and campId1 == obj2.campId_ then break end
 
-                    local x2, y2 = obj2.x_ + tonum(obj2.radiusOffsetX_), obj2.y_ + tonum(obj2.radiusOffsetY_)
+                    local x2, y2 = obj2.x_ + checknumber(obj2.radiusOffsetX_), obj2.y_ + checknumber(obj2.radiusOffsetY_)
                     local dx = x2 - x1
                     local dy = y2 - y1
                     local dist = sqrt(dx * dx + dy * dy)
@@ -392,9 +392,9 @@ function MapRuntime:tickCollider(objects, colls, dt)
     -- 检查碰撞和开火
     local events = {}
     for obj1, obj1targets in pairs(dists) do
-        local fireRange1 = tonum(obj1.fireRange_)
-        local radius1 = tonum(obj1.radius_)
-        local checkFire1 = obj1.fireEnabled_ and tonum(obj1.fireLock_) <= 0 and fireRange1 > 0 and tonum(obj1.fireCooldown_) <= 0
+        local fireRange1 = checknumber(obj1.fireRange_)
+        local radius1 = checknumber(obj1.radius_)
+        local checkFire1 = obj1.fireEnabled_ and checknumber(obj1.fireLock_) <= 0 and fireRange1 > 0 and checknumber(obj1.fireCooldown_) <= 0
 
         -- 从 obj1 的目标中查找距离最近的
         local minTargetDist = 999999

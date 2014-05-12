@@ -288,7 +288,7 @@ function MovableBehavior:bind(object)
     object:bindMethod(self, "getFuturePosition", getFuturePosition)
 
     local function setSpeed(object, maxSpeed)
-        object.speed_ = tonum(maxSpeed)
+        object.speed_ = checknumber(maxSpeed)
         if object.speed_ < 0 then object.speed_ = 0 end
 
         object.speedIncr_ = object.speed_ * 0.025 * MovableBehavior.SPEED_SCALE
@@ -336,7 +336,7 @@ function MovableBehavior:unbind(object)
 end
 
 function MovableBehavior:reset(object)
-    object:setSpeed(tonum(object.state_.speed))
+    object:setSpeed(checknumber(object.state_.speed))
     object.currentSpeed_ = 0
     object.movingState_  = MovableBehavior.MOVING_STATE_STOPPED
 end

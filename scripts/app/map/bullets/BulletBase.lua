@@ -9,7 +9,7 @@ function BulletBase:ctor(source, target, sprite, delay)
     self.source_   = source
     self.target_   = target
     self.sprite_   = sprite
-    self.delay_    = tonum(delay)
+    self.delay_    = checknumber(delay)
     self.flag_     = 0
 
     self.damage_   = math.random(source.minDamage_, source.maxDamage_)

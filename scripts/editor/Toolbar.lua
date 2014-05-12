@@ -5,7 +5,7 @@ local ToolBase   = require("editor.ToolBase")
 local Toolbar = class("Toolbar")
 
 function Toolbar:ctor(map)
-    require("framework.api.EventProtocol").extend(self)
+    cc(self):addComponent("components.behavior.EventProtocol"):exportMethods()
 
     self.map_                = map
     self.tools_              = {}
@@ -19,8 +19,6 @@ function Toolbar:ctor(map)
     self.sprite_             = nil
 
     self.isDefaultTouch_     = false
-
-    require("framework.api.EventProtocol").extend(self)
 end
 
 function Toolbar:onTouch(event, x, y)
@@ -161,8 +159,8 @@ function Toolbar:createView(parent, bgImageName, padding, scale, toolbarLines)
 
     parent:addChild(self.sprite_)
 
-    self.sprite_:registerScriptHandler(function(event)
-        if event == "exit" then
+    self.sprite_:addNodeEventListener(cc.NODE_EVENT, function(event)
+        if event.name == "exit" then
             self:removeAllEventListeners()
         end
     end)

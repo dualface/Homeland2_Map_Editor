@@ -128,8 +128,8 @@ function FireBehavior:unbind(object)
 end
 
 function FireBehavior:reset(object)
-    object.fireOffsetX_   = toint(object.state_.fireOffsetX)
-    object.fireOffsetY_   = toint(object.state_.fireOffsetY)
+    object.fireOffsetX_   = checkint(object.state_.fireOffsetX)
+    object.fireOffsetY_   = checkint(object.state_.fireOffsetY)
     if object.staticIndex_ then
         local index = object.staticIndex_
         if type(object.state_.fireOffsetX) == "table" then
@@ -139,16 +139,16 @@ function FireBehavior:reset(object)
             object.fireOffsetY_ = object.state_.fireOffsetY[index]
         end
     end
-    object.fireRange_     = toint(object.state_.fireRange)
-    object.cooldown_      = tonum(object.state_.cooldown)
+    object.fireRange_     = checkint(object.state_.fireRange)
+    object.cooldown_      = checknumber(object.state_.cooldown)
     object.fireCooldown_  = 0
     object.fireEnabled_   = object.state_.fireEnabled
 
-    object.minDamage_     = toint(object.state_.minDamage)
-    object.maxDamage_     = toint(object.state_.maxDamage)
-    object.hitrate_       = toint(object.state_.hitrate)
-    object.critical_      = toint(object.state_.critical)
-    object.criticalPower_ = tonum(object.state_.criticalPower)
+    object.minDamage_     = checkint(object.state_.minDamage)
+    object.maxDamage_     = checkint(object.state_.maxDamage)
+    object.hitrate_       = checkint(object.state_.hitrate)
+    object.critical_      = checkint(object.state_.critical)
+    object.criticalPower_ = checknumber(object.state_.criticalPower)
 
     if type(object.fireEnabled_) ~= "boolean" then
         object.fireEnabled_ = true

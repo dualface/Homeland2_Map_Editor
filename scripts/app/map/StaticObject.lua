@@ -14,10 +14,10 @@ function StaticObject:ctor(id, state, map)
     end
     StaticObject.super.ctor(self, id, state, map)
 
-    self.radiusOffsetX_ = toint(self.radiusOffsetX_)
-    self.radiusOffsetY_ = toint(self.radiusOffsetY_)
-    self.radius_        = toint(self.radius_)
-    self.flipSprite_    = tobool(self.flipSprite_)
+    self.radiusOffsetX_ = checkint(self.radiusOffsetX_)
+    self.radiusOffsetY_ = checkint(self.radiusOffsetY_)
+    self.radius_        = checkint(self.radius_)
+    self.flipSprite_    = checkbool(self.flipSprite_)
     self.visible_       = true
     self.valid_         = true
     self.sprite_        = nil
