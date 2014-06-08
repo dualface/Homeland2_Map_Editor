@@ -119,12 +119,20 @@ function ObjectInspector:onTouch(event, x, y)
         local bx, by = button.x * self.scale_, button.y * self.scale_
         if x >= bx - bsize and x <= bx + bsize and y <= by + bsize and y >= by - bsize then
             local message = string.format("Enter new [%s] value.\nNOTE: %s", button.name, tostring(button.editNote))
-            local value = device.showInputBox("Change object property", message, tostring(button.value))
-            if value ~= "" then
-                updateObject(function()
-                    button.editFunction(self.object_, value)
-                end)
-            end
+
+            local p = self.sprite_:convertToWorldSpaceAR(cc.p(bx, by))
+            luaoc.callStaticMethod("AppController", "showEditBox", {
+                x = p.x + 40,
+                y = p.y,
+                width = 140,
+                height = 24,
+            })
+            -- local value = device.showInputBox("Change object property", message, tostring(button.value))
+            -- if value ~= "" then
+            --     updateObject(function()
+            --         button.editFunction(self.object_, value)
+            --     end)
+            -- end
         end
     end
 end

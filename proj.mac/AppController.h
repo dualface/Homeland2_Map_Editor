@@ -23,6 +23,7 @@
  ****************************************************************************/
 
 #import "EAGLView.h"
+#import "AppOverlayerWindow.h"
 
 #include <string>
 #include "ProjectConfig/SimulatorConfig.h"
@@ -38,9 +39,15 @@
 
     AppDelegate *app;
     ProjectConfig projectConfig;
+
+    AppOverlayerWindow *overlayer;
+    NSTextField *editbox;
 }
 
 @property (nonatomic, assign) IBOutlet NSMenu* menu;
+
++ (void) showEditBox:(NSDictionary *)dict;
+- (void) showEditBox:(NSRect)rect;
 
 - (IBAction) onFileRelaunch:(id)sender;
 

@@ -8,7 +8,7 @@ if [ ! -f $BIN ]; then
 fi
 
 ARG="-relaunch-off -quick $QUICK_COCOS2DX_ROOT -workdir $DIR"
-SIZE="-size 1024x600"
+SIZE="-size 1280x800"
 CMD="$BIN $ARG $SIZE"
 
 until $CMD; do

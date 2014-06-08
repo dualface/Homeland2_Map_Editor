@@ -152,7 +152,7 @@ end
 
 -- 开始编辑地图
 function EditorScene:editMap()
-    CCDirector:sharedDirector():setDisplayStats(false)
+    -- CCDirector:sharedDirector():setDisplayStats(false)
 
     if self.mapRuntime_ then
         self.mapRuntime_:stopPlay()

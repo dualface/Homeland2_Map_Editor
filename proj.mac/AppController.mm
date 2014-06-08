@@ -42,11 +42,50 @@ using namespace cocos2d::extra;
 
 @implementation AppController
 
+static AppController *s_instance = nil;
 @synthesize menu;
+
++ (void) showEditBox:(NSDictionary *)dict
+{
+    int x = [[dict objectForKey:@"x"] intValue];
+    int y = [[dict objectForKey:@"y"] intValue];
+    int width = [[dict objectForKey:@"width"] intValue];
+    int height = [[dict objectForKey:@"height"] intValue];
+    [s_instance showEditBox:NSMakeRect(x, y, width, height)];
+}
+
+- (void) showEditBox:(NSRect)rect
+{
+    NSLog(@"rect(%0.2f, %0.2f, %0.2f, %0.2f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+
+    CGFloat x = window.frame.origin.x + rect.origin.x;
+    CGFloat y = window.frame.origin.y + rect.origin.y - rect.size.height / 2;
+
+    rect = NSMakeRect(x, y, rect.size.width, rect.size.height);
+    NSLog(@"rect(%0.2f, %0.2f, %0.2f, %0.2f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+    [overlayer setFrame:rect display:YES];
+    [overlayer setIsVisible:YES];
+    [editbox setFrame:NSMakeRect(0, 0, rect.size.width, rect.size.height)];
+
+    [overlayer makeKeyAndOrderFront:self];
+}
+
+#
+
+- (id) init
+{
+    self = [super init];
+    if (self)
+    {
+        s_instance = self;
+    }
+    return self;
+}
 
 -(void) dealloc
 {
     CCDirector::sharedDirector()->end();
+    [editbox dealloc];
     [super dealloc];
 }
 
@@ -142,6 +181,14 @@ using namespace cocos2d::extra;
     [window becomeFirstResponder];
     [window makeKeyAndOrderFront:self];
     [window setAcceptsMouseMovedEvents:NO];
+
+    // create editbox
+    overlayer = [[AppOverlayerWindow alloc] init];
+    [overlayer setIsVisible:NO];
+
+    editbox = [[NSTextField alloc] init];
+    [overlayer setContentView:editbox];
+    [window addChildWindow:overlayer ordered:NSWindowAbove];
 }
 
 - (void) startup
