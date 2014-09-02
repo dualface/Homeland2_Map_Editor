@@ -78,14 +78,14 @@ end
 function StaticObject:updateView()
     local sprite = self.sprite_
     sprite:setPosition(math.floor(self.x_ + self.offsetX_), math.floor(self.y_ + self.offsetY_))
-    sprite:setFlipX(self.flipSprite_)
+    sprite:setFlippedX(self.flipSprite_)
 end
 
 function StaticObject:fastUpdateView()
     if not self.updated__ then return end
     local sprite = self.sprite_
     sprite:setPosition(self.x_ + self.offsetX_, self.y_ + self.offsetY_)
-    sprite:setFlipX(self.flipSprite_)
+    sprite:setFlippedX(self.flipSprite_)
 end
 
 function StaticObject:isVisible()

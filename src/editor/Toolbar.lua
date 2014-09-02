@@ -109,48 +109,48 @@ function Toolbar:createView(parent, bgImageName, padding, scale, toolbarLines)
     AutoLayout.alignItemsHorizontally(items, padding * scale, self.toolbarHeight_ / 2, padding * scale, toolbarLines)
 
     -- 放大缩小按钮
-    local zoomInButton = ui.newImageMenuItem({
-        image    = "#ZoomInButton.png",
-        x        = display.right - 72 * scale,
-        y        = self.toolbarHeight_ / 2,
-        listener = function()
-            local scale = self.map_:getCamera():getScale()
-            if scale < 2.0 then
-                scale = scale + 0.5
-                if scale > 2.0 then scale = 2.0 end
-                self.map_:getCamera():setScale(scale)
-                self.map_:updateView()
-                self.scaleLabel_:setString(string.format("%0.2f", scale))
-            end
-        end
-    })
-    zoomInButton:setScale(scale)
+    -- local zoomInButton = ui.newImageMenuItem({
+    --     image    = "#ZoomInButton.png",
+    --     x        = display.right - 72 * scale,
+    --     y        = self.toolbarHeight_ / 2,
+    --     listener = function()
+    --         local scale = self.map_:getCamera():getScale()
+    --         if scale < 2.0 then
+    --             scale = scale + 0.5
+    --             if scale > 2.0 then scale = 2.0 end
+    --             self.map_:getCamera():setScale(scale)
+    --             self.map_:updateView()
+    --             self.scaleLabel_:setString(string.format("%0.2f", scale))
+    --         end
+    --     end
+    -- })
+    -- zoomInButton:setScale(scale)
 
-    local zoomOutButton = ui.newImageMenuItem({
-        image    = "#ZoomOutButton.png",
-        x        = display.right - 28 * scale,
-        y        = self.toolbarHeight_ / 2,
-        listener = function()
-            local scale = self.map_:getCamera():getScale()
-            if scale > 0.5 then
-                scale = scale - 0.5
-                if scale < 0.5 then scale = 0.5 end
-                self.map_:getCamera():setScale(scale)
-                self.map_:updateView()
-                self.scaleLabel_:setString(string.format("%0.2f", scale))
-            end
-        end
-    })
-    zoomOutButton:setScale(scale)
+    -- local zoomOutButton = ui.newImageMenuItem({
+    --     image    = "#ZoomOutButton.png",
+    --     x        = display.right - 28 * scale,
+    --     y        = self.toolbarHeight_ / 2,
+    --     listener = function()
+    --         local scale = self.map_:getCamera():getScale()
+    --         if scale > 0.5 then
+    --             scale = scale - 0.5
+    --             if scale < 0.5 then scale = 0.5 end
+    --             self.map_:getCamera():setScale(scale)
+    --             self.map_:updateView()
+    --             self.scaleLabel_:setString(string.format("%0.2f", scale))
+    --         end
+    --     end
+    -- })
+    -- zoomOutButton:setScale(scale)
 
-    local zoombar = ui.newMenu({zoomInButton, zoomOutButton})
-    self.sprite_:addChild(zoombar)
+    -- local zoombar = ui.newMenu({zoomInButton, zoomOutButton})
+    -- self.sprite_:addChild(zoombar)
 
     self.scaleLabel_ = ui.newTTFLabel({
         text  = "1.00",
         font  = ui.DEFAULT_TTF_FONT,
         size  = 24 * scale,
-        color = ccc3(255, 255, 255),
+        color = cc.c3b(255, 255, 255),
         align = ui.TEXT_ALIGN_RIGHT,
         x     = display.right - 96 * scale,
         y     = self.toolbarHeight_ / 2,
@@ -194,7 +194,7 @@ function Toolbar:showNotice(text, fontsize, delay)
     local label = ui.newTTFLabel({
         text = "Save map ok",
         size = fontsize or 96,
-        color = ccc3(100, 255, 100),
+        color = cc.c3b(100, 255, 100),
         align = ui.TEXT_ALIGN_CENTER,
     })
 

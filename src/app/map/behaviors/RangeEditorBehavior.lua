@@ -86,11 +86,11 @@ function RangeEditorBehavior:bind(object)
         object.handler_:setScale(scale)
 
         if object.isSelected_ then
-            object.idLabel_:setColor(ccc3(unpack(RangeEditorBehavior.SELECTED_LABEL_COLOR)))
-            object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(RangeEditorBehavior.SELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(RangeEditorBehavior.SELECTED_LABEL_COLOR)))
+            object.radiusCircle_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(RangeEditorBehavior.SELECTED_COLOR))))
         else
-            object.idLabel_:setColor(ccc3(unpack(RangeEditorBehavior.UNSELECTED_LABEL_COLOR)))
-            object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(RangeEditorBehavior.UNSELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(RangeEditorBehavior.UNSELECTED_LABEL_COLOR)))
+            object.radiusCircle_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(RangeEditorBehavior.UNSELECTED_COLOR))))
         end
     end
     object:bindMethod(self, "updateView", updateView)

@@ -326,9 +326,9 @@ end
 function Map:createView(parent)
     assert(self.batch_ == nil, "Map:createView() - view already created")
 
-    CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGB565)
+    cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2D_PIXEL_FORMAT_RGB565)
     self.bgSprite_ = display.newSprite(self.imageName_)
-    CCTexture2D:setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888)
+    cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2D_PIXEL_FORMAT_RGBA8888)
 
     self.bgSprite_:addNodeEventListener(cc.NODE_EVENT, function(event)
         -- 地图对象删除时，自动从缓存里卸载地图材质

@@ -112,8 +112,8 @@ function ObjectTool:createObjectBindingLabel(text, isStaticLabel)
         text         = text,
         size         = 20,
         align        = ui.TEXT_ALIGN_CENTER,
-        color        = ccc3(255, 100, 100),
-        colorOutline = ccc3(255, 255, 255),
+        color        = cc.c3b(255, 100, 100),
+        colorOutline = cc.c3b(255, 255, 255),
         x            = labelX,
         y            = labelY,
     })
@@ -299,7 +299,7 @@ function ObjectTool:showToolbox(mapX, mapY)
     local bgHeight = rows * ObjectTool.TOOLBOX_PADDING + 4
     local rect = display.newRect(bgWidth, bgHeight)
     rect:setFill(true)
-    rect:setLineColor(ccc4FFromccc4B(ccc4(120, 120, 120, 80)))
+    rect:setLineColor(cc.c4fFromc4b(cc.c4b(120, 120, 120, 80)))
     rect:setOpacity(80)
     rect:setPosition(x + bgWidth / 2 - ObjectTool.TOOLBOX_PADDING / 2 - 2,
                      y - bgHeight / 2 + ObjectTool.TOOLBOX_PADDING / 2 + 2)
@@ -332,7 +332,7 @@ function ObjectTool:showToolbox(mapX, mapY)
         local rect = display.newRect(ObjectTool.TOOLBOX_ICON_SIZE,
                                      ObjectTool.TOOLBOX_ICON_SIZE)
         rect:setFill(true)
-        rect:setLineColor(ccc4FFromccc4B(ccc4(32, 32, 32, 120)))
+        rect:setLineColor(cc.c4fFromc4b(cc.c4b(32, 32, 32, 120)))
         rect:setOpacity(70)
         rect:setPosition(x, y)
         layer:addChild(rect)

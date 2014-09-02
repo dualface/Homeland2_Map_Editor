@@ -83,12 +83,12 @@ function PathEditorBehavior:bind(object)
         object.debugLayer_:addChild(object.polygon_, EditorConstants.POLYGON_ZORDER)
 
         if object.isSelected_ then
-            object.polygon_:setLineColor(ccc4FFromccc4B(ccc4(unpack(PathEditorBehavior.SELECTED_COLOR))))
-            object.idLabel_:setColor(ccc3(unpack(EditorConstants.SELECTED_LABEL_COLOR)))
+            object.polygon_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(PathEditorBehavior.SELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(EditorConstants.SELECTED_LABEL_COLOR)))
             object.polygon_:setLineStippleEnabled(false)
         else
-            object.polygon_:setLineColor(ccc4FFromccc4B(ccc4(unpack(PathEditorBehavior.UNSELECTED_COLOR))))
-            object.idLabel_:setColor(ccc3(unpack(EditorConstants.UNSELECTED_LABEL_COLOR)))
+            object.polygon_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(PathEditorBehavior.UNSELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(EditorConstants.UNSELECTED_LABEL_COLOR)))
             object.polygon_:setLineStippleEnabled(true)
         end
 

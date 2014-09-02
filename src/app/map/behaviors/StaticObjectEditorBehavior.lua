@@ -45,7 +45,7 @@ function StaticObjectEditorBehavior:bind(object)
         debugLayer:addChild(object.idLabel_, EditorConstants.LABEL_ZORDER)
 
         object.radiusCircle_ = display.newCircle(object.radius_)
-        object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(EditorConstants.UNSELECTED_COLOR))))
+        object.radiusCircle_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(EditorConstants.UNSELECTED_COLOR))))
         object.radiusCircle_:setLineStipple(checknumber("1111000011110000", 2))
         object.radiusCircle_:setLineStippleEnabled(true)
         debugLayer:addChild(object.radiusCircle_, EditorConstants.CIRCLE_ZORDER)
@@ -75,8 +75,8 @@ function StaticObjectEditorBehavior:bind(object)
             object.playerIdLabel_ = ui.newTTFLabelWithOutline({
                 text         = "Player",
                 size         = 24,
-                outlineColor = ccc3(10, 115, 107),
-                color        = ccc3(255, 255, 255),
+                outlineColor = cc.c3b(10, 115, 107),
+                color        = cc.c3b(255, 255, 255),
                 align        = ui.TEXT_ALIGN_CENTER,
             })
             debugLayer:addChild(object.playerIdLabel_)
@@ -143,11 +143,11 @@ function StaticObjectEditorBehavior:bind(object)
 
         object.flagSprite_:setPosition(x, y)
         if object.isSelected_ then
-            object.idLabel_:setColor(ccc3(unpack(EditorConstants.SELECTED_LABEL_COLOR)))
-            object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(EditorConstants.SELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(EditorConstants.SELECTED_LABEL_COLOR)))
+            object.radiusCircle_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(EditorConstants.SELECTED_COLOR))))
         else
-            object.idLabel_:setColor(ccc3(unpack(EditorConstants.UNSELECTED_LABEL_COLOR)))
-            object.radiusCircle_:setLineColor(ccc4FFromccc4B(ccc4(unpack(EditorConstants.UNSELECTED_COLOR))))
+            object.idLabel_:setColor(cc.c3b(unpack(EditorConstants.UNSELECTED_LABEL_COLOR)))
+            object.radiusCircle_:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(EditorConstants.UNSELECTED_COLOR))))
         end
         object.flagSprite_:setScale(scale)
 
@@ -163,10 +163,10 @@ function StaticObjectEditorBehavior:bind(object)
             local circle = object.fireRangeCircle_
             circle:setPosition(x + object.radiusOffsetX_, y + object.radiusOffsetY_)
             if object.isSelected_ then
-                circle:setLineColor(ccc4FFromccc4B(ccc4(unpack(StaticObjectEditorBehavior.FIRE_CIRCLE_SELECTED_COLOR))))
+                circle:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(StaticObjectEditorBehavior.FIRE_CIRCLE_SELECTED_COLOR))))
                 object.fireRangeCircle_:setLineStippleEnabled(false)
             else
-                circle:setLineColor(ccc4FFromccc4B(ccc4(unpack(StaticObjectEditorBehavior.FIRE_CIRCLE_UNSELECTED_COLOR))))
+                circle:setLineColor(cc.c4fFromc4b(cc.c4b(unpack(StaticObjectEditorBehavior.FIRE_CIRCLE_UNSELECTED_COLOR))))
                 object.fireRangeCircle_:setLineStippleEnabled(true)
             end
         end

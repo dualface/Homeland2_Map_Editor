@@ -92,43 +92,43 @@ function EditorScene:ctor()
     end)
 
     -- 创建运行地图时的工具栏
-    local toggleDebugButton = ui.newImageMenuItem({
-        image         = "#ToggleDebugButton.png",
-        imageSelected = "#ToggleDebugButtonSelected.png",
-        x             = display.left + 32 * self.editorUIScale,
-        y             = display.top - 32 * self.editorUIScale,
-        listener      = function()
-            self.map_:setDebugViewEnabled(not self.map_:isDebugViewEnabled())
-        end
-    })
-    toggleDebugButton:setScale(self.editorUIScale)
+    -- local toggleDebugButton = cc.ui.UIPuthButton({
+    --     image         = "#ToggleDebugButton.png",
+    --     imageSelected = "#ToggleDebugButtonSelected.png",
+    --     x             = display.left + 32 * self.editorUIScale,
+    --     y             = display.top - 32 * self.editorUIScale,
+    --     listener      = function()
+    --         self.map_:setDebugViewEnabled(not self.map_:isDebugViewEnabled())
+    --     end
+    -- })
+    -- toggleDebugButton:setScale(self.editorUIScale)
 
-    local stopMapButton = ui.newImageMenuItem({
-        image         = "#StopMapButton.png",
-        imageSelected = "#StopMapButtonSelected.png",
-        x             = display.left + 88 * self.editorUIScale,
-        y             = display.top - 32 * self.editorUIScale,
-        listener      = function() self:editMap() end
-    })
-    stopMapButton:setScale(self.editorUIScale)
+    -- local stopMapButton = ui.newImageMenuItem({
+    --     image         = "#StopMapButton.png",
+    --     imageSelected = "#StopMapButtonSelected.png",
+    --     x             = display.left + 88 * self.editorUIScale,
+    --     y             = display.top - 32 * self.editorUIScale,
+    --     listener      = function() self:editMap() end
+    -- })
+    -- stopMapButton:setScale(self.editorUIScale)
 
-    self.playToolbar_ = ui.newMenu({toggleDebugButton, stopMapButton})
-    self.playToolbar_:setVisible(false)
-    self:addChild(self.playToolbar_)
+    -- self.playToolbar_ = ui.newMenu({toggleDebugButton, stopMapButton})
+    -- self.playToolbar_:setVisible(false)
+    -- self:addChild(self.playToolbar_)
 
     self:editMap()
 end
 
 -- 开始运行地图
 function EditorScene:playMap()
-    CCDirector:sharedDirector():setDisplayStats(true)
+    cc.Director:getInstance():setDisplayStats(true)
 
     -- 隐藏编辑器界面
     self.toolbar_:getView():setVisible(false)
 
     -- 保存地图当前状态
     self.mapState_ = self.map_:vardump()
-    self.playToolbar_:setVisible(true)
+    -- self.playToolbar_:setVisible(true)
     self.mapNameLabel_:setVisible(false)
 
     self.map_:setDebugViewEnabled(false)
@@ -152,7 +152,7 @@ end
 
 -- 开始编辑地图
 function EditorScene:editMap()
-    -- CCDirector:sharedDirector():setDisplayStats(false)
+    -- cc.Director:getInstance():setDisplayStats(false)
 
     if self.mapRuntime_ then
         self.mapRuntime_:stopPlay()
@@ -169,7 +169,7 @@ function EditorScene:editMap()
     end
 
     self.toolbar_:getView():setVisible(true)
-    self.playToolbar_:setVisible(false)
+    -- self.playToolbar_:setVisible(false)
     self.mapNameLabel_:setVisible(true)
 
     local camera = self.map_:getCamera()
@@ -179,6 +179,19 @@ function EditorScene:editMap()
                      EditorConstants.MAP_PADDING)
     camera:setScale(1)
     camera:setOffset(0, 0)
+
+
+    local batch = display.newBatchNode("SheetMapBattle.png")
+        :addTo(self)
+
+    display.newSprite("#IncreaseHp0025.png")
+        :pos(display.cx, display.cy)
+        :addTo(batch)
+
+    display.newSprite("#IncreaseHp0025.png")
+        :pos(display.cx + 100, display.cy)
+        :addTo(self)
+
 
     -- 强制垃圾回收
     collectgarbage()

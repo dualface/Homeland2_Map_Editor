@@ -297,7 +297,7 @@ function MapRuntime:newDecoration(decorationName, target, x, y)
     local view = decoration:getView()
     if target then
         local targetView = target:getView()
-        self.batch_:reorderChild(view, targetView:getZOrder() + decoration.zorder_)
+        self.batch_:reorderChild(view, targetView:getLocalZOrder() + decoration.zorder_)
         local ox, oy = checknumber(x), checknumber(y)
         x, y = target:getPosition()
         x = math.floor(x)

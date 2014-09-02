@@ -42,7 +42,7 @@ function CannonBullet:hit()
     boom:playAnimationOnce(animation, "removeWhenFinished")
 
     local parent = self.sprite_:getParent()
-    parent:addChild(boom, self.sprite_:getZOrder())
+    parent:addChild(boom, self.sprite_:getLocalZOrder())
 end
 
 return CannonBullet
